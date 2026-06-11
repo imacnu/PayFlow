@@ -1,0 +1,72 @@
+name: SubscriptionGuardian
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    # Rellena tu equipo de desarrollo (Apple Developer Team ID) antes de compilar.
+    DEVELOPMENT_TEAM: ""
+    CURRENT_PROJECT_VERSION: "1"
+    MARKETING_VERSION: "1.0.0"
+    GENERATE_INFOPLIST_FILE: false
+
+packages:
+  SubscriptionGuardianCore:
+    path: Packages/SubscriptionGuardianCore
+  GoogleSignIn:
+    url: https://github.com/google/GoogleSignIn-iOS
+    from: "8.0.0"
+
+targets:
+  SubscriptionGuardian:
+    type: application
+    platform: iOS
+    sources:
+      - path: App/Sources
+      - path: App/Resources
+    dependencies:
+      - package: SubscriptionGuardianCore
+      - package: GoogleSignIn
+        product: GoogleSignIn
+      - target: SubscriptionGuardianWidgets
+    entitlements:
+      path: App/SubscriptionGuardian.entitlements
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: Subscription Guardian
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        UILaunchScreen: {}
+        UIBackgroundModes:
+          - remote-notification
+        # Sustituye por tu Client ID de Google (consola de Google Cloud).
+        GIDClientID: "PLACEHOLDER.apps.googleusercontent.com"
+        CFBundleURLTypes:
+          - CFBundleURLSchemes:
+              # Client ID de Google invertido, p.ej. com.googleusercontent.apps.123-abc
+              - "com.googleusercontent.apps.PLACEHOLDER"
+        ITSAppUsesNonExemptEncryption: false
+
+  SubscriptionGuardianWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Widgets/Sources
+    dependencies:
+      - package: SubscriptionGuardianCore
+    entitlements:
+      path: Widgets/SubscriptionGuardianWidgets.entitlements
+    info:
+      path: Widgets/Info.plist
+      properties:
+        CFBundleDisplayName: Subscription Guardian Widgets
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
