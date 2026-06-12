@@ -10,7 +10,7 @@ import SwiftUI
 /// Insignia compacta con fondo teñido y texto en el color de acento.
 struct PillBadge: View {
     let text: String
-    var tint: Color = .electricBlue
+    var tint: Color = .appCyan
 
     var body: some View {
         Text(text)

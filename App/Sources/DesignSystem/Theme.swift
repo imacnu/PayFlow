@@ -28,33 +28,48 @@ extension Color {
         self.init(red: red, green: green, blue: blue)
     }
 
-    // MARK: Acentos semánticos
+    // MARK: Acentos semánticos (valores exactos del mockup v2)
 
     /// Azul eléctrico principal (#1F6FEB). Acciones y navegación.
     static let electricBlue = Color(hex: "1F6FEB")
 
-    /// Cian eléctrico (#38E1FF). Foco, selección, navegación activa.
-    static let appCyan = Color(hex: "38E1FF")
+    /// Cian eléctrico (#39D5FF). Foco, selección, navegación activa.
+    static let appCyan = Color(hex: "39D5FF")
 
-    /// Lima neón (#B8F549). Ahorro, éxito, activación positiva.
-    static let appLime = Color(hex: "B8F549")
+    /// Cian profundo (#00B7FF). Inicio de los gradientes de acción.
+    static let appCyanDeep = Color(hex: "00B7FF")
 
-    /// Magenta neón (#FF4DA6). Alertas, vencimientos, estados críticos.
-    static let appMagenta = Color(hex: "FF4DA6")
+    /// Verde azulado neón (#1EFFC8). Cierre de gradientes y financiación.
+    static let appTeal = Color(hex: "1EFFC8")
 
-    /// Ámbar controlado (#FFB454). Próximos eventos y avisos suaves.
-    static let appAmber = Color(hex: "FFB454")
+    /// Lima neón (#7BFF8F). Ahorro, éxito, activación positiva.
+    static let appLime = Color(hex: "7BFF8F")
+
+    /// Magenta neón (#FF4FB7). Alertas, vencimientos, estados críticos.
+    static let appMagenta = Color(hex: "FF4FB7")
+
+    /// Coral de alerta (#FF667F). Vencidos e incidencias.
+    static let appCoral = Color(hex: "FF667F")
+
+    /// Ámbar controlado (#FFAA48). Próximos eventos y avisos suaves.
+    static let appAmber = Color(hex: "FFAA48")
+
+    /// Texto secundario sobre fondo oscuro (#9AB2C6).
+    static let appMuted = Color(hex: "9AB2C6")
 
     // MARK: Fondo y superficies
 
     /// Blanco cristal para fondos en modo claro (#F6F9FF).
     static let crystalWhite = Color(hex: "F6F9FF")
 
-    /// Azul petróleo profundo: tono superior del fondo oscuro (#0B1B26).
-    static let deepPetrol = Color(hex: "0B1B26")
+    /// Azul petróleo profundo: tono superior del fondo oscuro (#07111B).
+    static let deepPetrol = Color(hex: "07111B")
 
-    /// Verde azulado oscuro: tono inferior del fondo oscuro (#0D2330).
-    static let darkTeal = Color(hex: "0D2330")
+    /// Azul petróleo medio: tramo central del fondo (#0B1F2B).
+    static let midPetrol = Color(hex: "0B1F2B")
+
+    /// Verde azulado oscuro: tono inferior del fondo oscuro (#0C2D36).
+    static let darkTeal = Color(hex: "0C2D36")
 
     /// Grafito heredado; se mantiene como tono de reposo (#1C1F26).
     static let graphite = Color(hex: "1C1F26")
@@ -63,23 +78,23 @@ extension Color {
 // MARK: - Gradientes
 
 extension LinearGradient {
-    /// Gradiente de acento principal de la app (azul eléctrico → cian).
+    /// Gradiente de acento principal: cian profundo → cian → teal (135º).
     static let appAccent = LinearGradient(
-        colors: [.electricBlue, .appCyan],
+        colors: [.appCyanDeep, Color(hex: "35D7FF"), .appTeal],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
 
-    /// Columna luminosa para gráficos: cian brillante arriba que se apaga abajo.
+    /// Columna luminosa para gráficos: verde lima arriba → azul abajo.
     static let luminousColumn = LinearGradient(
-        colors: [.appCyan, Color.electricBlue.opacity(0.35)],
+        colors: [Color(hex: "6FFFB0"), Color.appCyanDeep.opacity(0.95)],
         startPoint: .top,
         endPoint: .bottom
     )
 
-    /// Acento magenta→coral para acciones de alto impacto (financiación).
+    /// Acento magenta → coral → ámbar para acciones de financiación.
     static let magentaAccent = LinearGradient(
-        colors: [.appMagenta, Color(hex: "FF667F")],
+        colors: [.appMagenta, .appCoral, Color(hex: "FFA560")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
@@ -90,9 +105,13 @@ extension LinearGradient {
 extension ShapeStyle where Self == Color {
     static var electricBlue: Color { Color.electricBlue }
     static var appCyan: Color { Color.appCyan }
+    static var appCyanDeep: Color { Color.appCyanDeep }
+    static var appTeal: Color { Color.appTeal }
     static var appLime: Color { Color.appLime }
     static var appMagenta: Color { Color.appMagenta }
+    static var appCoral: Color { Color.appCoral }
     static var appAmber: Color { Color.appAmber }
+    static var appMuted: Color { Color.appMuted }
     static var crystalWhite: Color { Color.crystalWhite }
     static var graphite: Color { Color.graphite }
 }

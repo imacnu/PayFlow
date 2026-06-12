@@ -37,18 +37,18 @@ extension ServiceCategory {
         }
     }
 
-    /// Color de acento asociado a la categoría.
+    /// Color de acento asociado a la categoría (familia neón del mockup).
     var tintColor: Color {
         switch self {
-        case .streaming: return .red
-        case .ai: return .teal
-        case .productivity: return .electricBlue
-        case .music: return .green
-        case .finance: return .orange
-        case .fitness: return .pink
-        case .insurance: return .indigo
-        case .membership: return .purple
-        case .other: return .gray
+        case .streaming: return .appCyan
+        case .ai: return .appTeal
+        case .productivity: return .appMagenta
+        case .music: return .appLime
+        case .finance: return .appAmber
+        case .fitness: return Color(hex: "FF6C62")
+        case .insurance: return .electricBlue
+        case .membership: return Color(hex: "7E82FF")
+        case .other: return .appMuted
         }
     }
 

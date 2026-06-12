@@ -25,34 +25,60 @@ struct EmptyStateView: View {
 
     var body: some View {
         VStack(spacing: AppSpacing.m) {
-            // Composición hero: halo difuminado + cápsula con gradiente
-            // y flotación lenta que da vida al vacío.
+            // Orbe hero del mockup: cuadrado redondeado con gradiente cian,
+            // brillo radial superior izquierdo y flotación lenta.
             ZStack {
-                // Halo de luz ambiental detrás del icono.
+                // Halo de luz ambiental detrás del orbe.
                 Circle()
                     .fill(Color.appCyan.opacity(0.25))
-                    .frame(width: 140, height: 140)
+                    .frame(width: 150, height: 150)
                     .blur(radius: 40)
 
-                Circle()
-                    .fill(LinearGradient.appAccent)
-                    .frame(width: 92, height: 92)
+                RoundedRectangle(cornerRadius: 32, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.appCyan.opacity(0.4),
+                                Color.appCyanDeep.opacity(0.12)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
                     .overlay(
-                        Circle()
+                        // Reflejo radial en la esquina superior izquierda.
+                        RoundedRectangle(cornerRadius: 32, style: .continuous)
+                            .fill(
+                                RadialGradient(
+                                    colors: [
+                                        Color.white.opacity(0.28),
+                                        Color.white.opacity(0.06),
+                                        Color.white.opacity(0.0)
+                                    ],
+                                    center: .init(x: 0.3, y: 0.3),
+                                    startRadius: 4,
+                                    endRadius: 90
+                                )
+                            )
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 32, style: .continuous)
                             .strokeBorder(
                                 LinearGradient(
-                                    colors: [Color.white.opacity(0.55), Color.white.opacity(0.0)],
+                                    colors: [Color.white.opacity(0.35), Color.white.opacity(0.0)],
                                     startPoint: .top,
                                     endPoint: .bottom
                                 ),
                                 lineWidth: 1
                             )
                     )
-                    .glow(.appCyan, radius: 20, opacity: 0.4)
+                    .frame(width: 118, height: 118)
+                    .glow(.appCyan, radius: 22, opacity: 0.35)
 
                 Image(systemName: icon)
-                    .font(.system(size: 38, weight: .semibold))
-                    .foregroundStyle(.white)
+                    .font(.system(size: 44, weight: .semibold))
+                    .foregroundStyle(Color(hex: "EFFCFF"))
+                    .glow(.appCyan, radius: 12, opacity: 0.5)
             }
             .offset(y: floating ? -6 : 6)
             .animation(
@@ -63,14 +89,16 @@ struct EmptyStateView: View {
 
             VStack(spacing: AppSpacing.s) {
                 Text(title)
-                    .font(.title3.bold())
+                    .font(.system(size: 28, weight: .bold))
+                    .kerning(-0.5)
                     .multilineTextAlignment(.center)
 
                 Text(message)
-                    .font(.subheadline)
+                    .font(.system(size: 16))
+                    .lineSpacing(3)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, AppSpacing.s)
+                    .padding(.horizontal, AppSpacing.m)
             }
 
             // CTA hero opcional: cierre claro de la composición.

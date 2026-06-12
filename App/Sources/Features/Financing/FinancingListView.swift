@@ -152,7 +152,7 @@ struct FinancingRowView: View {
                     Text(financing.merchant)
                         .font(.headline)
                         .foregroundStyle(.primary)
-                    PillBadge(text: financing.provider.localizedName, tint: .electricBlue)
+                    PillBadge(text: financing.provider.localizedName, tint: .appCyan)
                 }
 
                 Spacer()

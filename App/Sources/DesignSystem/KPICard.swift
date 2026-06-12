@@ -53,15 +53,24 @@ struct KPICard: View {
     var glows: Bool = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.s) {
-            // Label e icono en reposo: pierden protagonismo sin perder lectura.
+        VStack(alignment: .leading, spacing: AppSpacing.sm) {
+            // Chip circular con glow + label en reposo (mini-label del mockup).
             HStack(spacing: AppSpacing.s) {
-                Image(systemName: icon)
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(tint.opacity(0.85))
+                ZStack {
+                    Circle()
+                        .fill(Color.white.opacity(0.05))
+                        .frame(width: 28, height: 28)
+                        .overlay(
+                            Circle().strokeBorder(tint.opacity(0.35), lineWidth: 1)
+                        )
+                    Image(systemName: icon)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(tint)
+                }
+                .glow(tint, radius: 9, opacity: 0.4)
 
                 Text(title)
-                    .font(.caption)
+                    .font(.system(size: 13))
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
@@ -69,11 +78,13 @@ struct KPICard: View {
                 Spacer(minLength: 0)
             }
 
-            // El importe domina la tarjeta.
+            // El importe domina la tarjeta: 38px, peso 800, tabular.
             Text(value)
-                .font(.system(.title2, design: .rounded).bold())
+                .font(.system(size: 34, weight: .heavy))
+                .monospacedDigit()
+                .kerning(-0.8)
                 .lineLimit(1)
-                .minimumScaleFactor(0.6)
+                .minimumScaleFactor(0.5)
                 .contentTransition(.numericText())
 
             // Píldora de tendencia opcional.

@@ -30,7 +30,7 @@ struct SubscriptionGuardianApp: App {
         WindowGroup {
             RootView()
                 // Acento de marca para todos los controles del sistema.
-                .tint(.electricBlue)
+                .tint(.appCyanDeep)
                 // Reconstruye toda la jerarquía al cambiar de idioma para que
                 // las cadenas ya renderizadas se vuelvan a resolver.
                 .id(languageRaw)

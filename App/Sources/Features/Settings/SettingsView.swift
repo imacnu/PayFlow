@@ -159,7 +159,7 @@ struct SettingsView: View {
                 HStack {
                     Text("settings.premium.status", comment: "Estado de la suscripción")
                     Spacer()
-                    PillBadge(text: "Premium", tint: .electricBlue)
+                    PillBadge(text: "Premium", tint: .appCyan)
                 }
             } else {
                 LabeledContent(
@@ -223,7 +223,7 @@ struct SettingsView: View {
                             systemImage: "square.and.arrow.up"
                         )
                         Spacer()
-                        PillBadge(text: "Premium", tint: .electricBlue)
+                        PillBadge(text: "Premium", tint: .appCyan)
                     }
                 }
             }

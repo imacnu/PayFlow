@@ -22,8 +22,7 @@ struct MonthlyEvolutionChart: View {
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.m) {
             Text("dashboard.evolutionChart.title", comment: "Evolución mensual")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .font(.system(size: 15, weight: .bold))
 
             if points.isEmpty {
                 Text(

@@ -15,8 +15,7 @@ struct UpcomingPaymentsSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.m) {
             Text("dashboard.upcoming.title", comment: "Próximos pagos")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .font(.system(size: 15, weight: .bold))
 
             if items.isEmpty {
                 calmEmptyState
@@ -75,13 +74,13 @@ private struct UpcomingPaymentRow: View {
                     .fill(
                         isImminent
                             ? Color.appAmber.opacity(0.16)
-                            : Color.electricBlue.opacity(0.12)
+                            : Color.appCyan.opacity(0.12)
                     )
             )
             .overlay(
                 RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous)
                     .strokeBorder(
-                        (isImminent ? Color.appAmber : Color.electricBlue).opacity(0.25),
+                        (isImminent ? Color.appAmber : Color.appCyan).opacity(0.25),
                         lineWidth: 1
                     )
             )

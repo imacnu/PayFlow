@@ -88,10 +88,11 @@ struct FinancingFormView: View {
         NavigationStack {
             Form {
                 Section(String(localized: "financing.form.merchantSection", defaultValue: "Comercio")) {
-                    TextField(
-                        String(localized: "financing.form.merchant", defaultValue: "Nombre del comercio"),
-                        text: $merchant
-                    )
+                    FloatingField(
+                        label: String(localized: "financing.form.merchant", defaultValue: "Nombre del comercio")
+                    ) {
+                        TextField("Apple Store", text: $merchant)
+                    }
                     Picker(
                         String(localized: "financing.form.provider", defaultValue: "Proveedor"),
                         selection: $provider
@@ -103,20 +104,22 @@ struct FinancingFormView: View {
                 }
 
                 Section(String(localized: "financing.form.amountsSection", defaultValue: "Importes")) {
-                    TextField(
-                        String(localized: "financing.form.totalAmount", defaultValue: "Importe total"),
-                        text: $totalAmountText
-                    )
-                    .keyboardType(.decimalPad)
+                    FloatingField(
+                        label: String(localized: "financing.form.totalAmount", defaultValue: "Importe total")
+                    ) {
+                        TextField("1.248,00", text: $totalAmountText)
+                            .keyboardType(.decimalPad)
+                    }
 
                     installmentsRow
 
-                    HStack {
-                        TextField(
-                            String(localized: "financing.form.monthlyAmount", defaultValue: "Cuota mensual"),
-                            text: $monthlyAmountText
-                        )
-                        .keyboardType(.decimalPad)
+                    HStack(alignment: .bottom) {
+                        FloatingField(
+                            label: String(localized: "financing.form.monthlyAmount", defaultValue: "Cuota mensual")
+                        ) {
+                            TextField("104,00", text: $monthlyAmountText)
+                                .keyboardType(.decimalPad)
+                        }
 
                         // Cálculo de cuota: debe sentirse inteligente y vivo.
                         Button {
@@ -134,11 +137,12 @@ struct FinancingFormView: View {
                         .disabled((totalAmount ?? 0) <= 0)
                     }
 
-                    TextField(
-                        String(localized: "financing.form.interest", defaultValue: "Interés % (opcional)"),
-                        text: $interestText
-                    )
-                    .keyboardType(.decimalPad)
+                    FloatingField(
+                        label: String(localized: "financing.form.interest", defaultValue: "Interés % (opcional)")
+                    ) {
+                        TextField("0,0", text: $interestText)
+                            .keyboardType(.decimalPad)
+                    }
                 }
 
                 Section {
@@ -146,7 +150,7 @@ struct FinancingFormView: View {
                         String(localized: "financing.form.hasFirstDate", defaultValue: "Fecha de primera cuota"),
                         isOn: $hasFirstInstallmentDate.animation(AppMotion.standard)
                     )
-                    .tint(.appCyan)
+                    .tint(.appTeal)
                     if hasFirstInstallmentDate {
                         DatePicker(
                             String(localized: "financing.form.firstDate", defaultValue: "Primera cuota"),

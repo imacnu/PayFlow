@@ -101,26 +101,27 @@ struct DashboardView: View {
     /// Rejilla de indicadores clave (2 columnas).
     private var kpiGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: AppSpacing.m) {
-            // Glow semántico por contexto: gasto en cian, financiación en
-            // magenta, ahorro en lima. El resto queda en reposo.
+            // Glow semántico por contexto: gasto y financiación en cian,
+            // ahorro en lima; suscripciones en teal de reposo.
             KPICard(
                 title: String(localized: "dashboard.kpi.monthlySpend", defaultValue: "Gasto mensual"),
                 value: viewModel.monthlyTotal.formatted(.currency(code: viewModel.currencyCode)),
-                icon: "eurosign.circle.fill",
+                icon: "creditcard.fill",
                 tint: .appCyan,
                 glows: true
             )
             KPICard(
                 title: String(localized: "dashboard.kpi.activeSubscriptions", defaultValue: "Suscripciones"),
                 value: "\(viewModel.activeSubscriptionsCount)",
-                icon: "square.stack.3d.up.fill",
-                tint: .electricBlue
+                icon: "repeat",
+                tint: .appTeal
             )
             KPICard(
                 title: String(localized: "dashboard.kpi.activeFinancings", defaultValue: "Financiaciones"),
                 value: "\(viewModel.activeFinancingsCount)",
-                icon: "creditcard.fill",
-                tint: .appMagenta
+                icon: "eurosign.circle.fill",
+                tint: .appCyan,
+                glows: true
             )
             KPICard(
                 title: String(localized: "dashboard.kpi.potentialSaving", defaultValue: "Ahorro potencial"),

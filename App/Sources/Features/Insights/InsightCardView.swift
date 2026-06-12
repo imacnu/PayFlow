@@ -64,7 +64,7 @@ struct InsightCardView: View {
         case .unusedSubscription: return .purple
         case .priceIncrease: return .red
         case .financingAlmostDone: return .green
-        case .dominantCategory: return .electricBlue
+        case .dominantCategory: return .appCyan
         }
     }
 

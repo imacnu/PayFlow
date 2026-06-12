@@ -102,7 +102,7 @@ struct SubscriptionDetailView: View {
                 value: subscription.amount
                     .formatted(.currency(code: subscription.currencyCode)),
                 icon: "creditcard.fill",
-                tint: .electricBlue
+                tint: .appCyan
             )
 
             KPICard(

@@ -108,19 +108,19 @@ struct CalendarView: View {
     private var legend: some View {
         HStack(spacing: AppSpacing.m) {
             legendItem(
-                color: .electricBlue,
+                color: .appCyan,
                 label: String(localized: "calendar.legend.subscriptions", defaultValue: "Suscripciones")
             )
             legendItem(
-                color: .appLime,
-                label: String(localized: "calendar.legend.financingEnd", defaultValue: "Fin financiación")
+                color: .appTeal,
+                label: String(localized: "calendar.legend.financingEnd", defaultValue: "Financiación")
             )
             legendItem(
                 color: .appAmber,
                 label: String(localized: "calendar.legend.upcoming", defaultValue: "Próximo")
             )
             legendItem(
-                color: .appMagenta,
+                color: .appCoral,
                 label: String(localized: "calendar.legend.overdue", defaultValue: "Vencido")
             )
         }
@@ -140,8 +140,7 @@ struct CalendarView: View {
     private var monthEventsList: some View {
         VStack(alignment: .leading, spacing: AppSpacing.s) {
             Text("calendar.monthEvents.title", comment: "Eventos del mes")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .font(.system(size: 15, weight: .bold))
 
             if viewModel.monthEvents.isEmpty {
                 // Vacío en calma: orden y silencio, no ausencia.
@@ -155,23 +154,38 @@ struct CalendarView: View {
                 }
                 .padding(.vertical, AppSpacing.xxs)
             } else {
-                ForEach(viewModel.monthEvents) { event in
-                    HStack(spacing: AppSpacing.s) {
-                        Circle()
-                            .fill(event.color())
-                            .frame(width: 7, height: 7)
-                            .glow(event.color(), radius: 4, opacity: 0.5)
-                        Text(event.date, format: .dateTime.day().month(.abbreviated))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .frame(width: 56, alignment: .leading)
-                        Text(event.title)
-                            .font(.caption.weight(.medium))
-                        Spacer()
-                        if let amount = event.amount {
-                            Text(amount, format: .currency(code: event.currencyCode))
-                                .font(.system(.caption, design: .rounded).bold())
+                VStack(spacing: AppSpacing.s) {
+                    ForEach(viewModel.monthEvents) { event in
+                        HStack(spacing: AppSpacing.s) {
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(event.title)
+                                    .font(.subheadline.weight(.semibold))
+                                if let amount = event.amount {
+                                    Text(amount, format: .currency(code: event.currencyCode))
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+
+                            Spacer()
+
+                            // Píldora de fecha con el color semántico del evento.
+                            Text(event.date, format: .dateTime.day().month(.abbreviated))
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(event.color())
+                                .padding(.horizontal, AppSpacing.sm)
+                                .padding(.vertical, 6)
+                                .background(event.color().opacity(0.12), in: Capsule())
                         }
+                        .padding(AppSpacing.sm)
+                        .background(
+                            RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous)
+                                .fill(Color.white.opacity(0.03))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous)
+                                .strokeBorder(Color.white.opacity(0.05), lineWidth: 1)
+                        )
                     }
                 }
             }

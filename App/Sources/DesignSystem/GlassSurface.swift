@@ -10,7 +10,9 @@
 
 import SwiftUI
 
-/// Modificador que aplica la superficie de vidrio estándar de la app.
+/// Modificador que aplica la superficie de vidrio del mockup v2: relleno
+/// degradado claro sobre material, borde azul translúcido, brillo interior
+/// superior y sombra profunda. Es lo que evita el efecto "panel negro plano".
 struct GlassCardModifier: ViewModifier {
     /// Radio de esquina de la superficie.
     var cornerRadius: CGFloat = AppRadius.card
@@ -18,40 +20,72 @@ struct GlassCardModifier: ViewModifier {
     /// Glow semántico opcional: solo para tarjetas con significado activo.
     var glowColor: Color? = nil
 
+    @Environment(\.colorScheme) private var colorScheme
+
+    /// Degradado del cristal: blanco 7% → 3% en oscuro (mockup), versión
+    /// clara equivalente en modo claro.
+    private var glassFill: LinearGradient {
+        if colorScheme == .dark {
+            return LinearGradient(
+                colors: [Color.white.opacity(0.07), Color.white.opacity(0.03)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        }
+        return LinearGradient(
+            colors: [Color.white.opacity(0.75), Color.white.opacity(0.45)],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+
+    /// Borde translúcido azulado del mockup: rgba(168,227,255,.12).
+    private var strokeColor: Color {
+        if let glowColor { return glowColor.opacity(0.4) }
+        return colorScheme == .dark
+            ? Color(hex: "A8E3FF").opacity(0.12)
+            : Color(hex: "5A8FAE").opacity(0.25)
+    }
+
     func body(content: Content) -> some View {
         content
-            // IMPLEMENTACIÓN ACTIVA: material ultrafino del sistema.
-            // Compila en cualquier SDK reciente y se ve muy parecido a Liquid Glass.
+            // Blur de fondo con el degradado de cristal por encima.
             .background(
-                .ultraThinMaterial,
-                in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                ZStack {
+                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                        .fill(.ultraThinMaterial)
+                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                        .fill(glassFill)
+                }
             )
-            // ALTERNATIVA NATIVA (iOS 26): para usar la API real de Liquid Glass,
-            // comenta el `.background(...)` de arriba y descomenta la línea siguiente.
-            // Verifica la firma exacta de la API en el SDK antes de activarla.
-            // .glassEffect(.regular, in: .rect(cornerRadius: cornerRadius))
-
-            // Borde sutil con gradiente para simular el brillo del cristal.
+            // Borde azulado + brillo interior en la arista superior.
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .strokeBorder(strokeColor, lineWidth: 1)
+            )
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .strokeBorder(
                         LinearGradient(
                             colors: [
-                                (glowColor ?? Color.white).opacity(glowColor == nil ? 0.35 : 0.5),
-                                Color.white.opacity(0.05)
+                                Color.white.opacity(colorScheme == .dark ? 0.18 : 0.8),
+                                Color.white.opacity(0)
                             ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
+                            startPoint: .top,
+                            endPoint: .center
                         ),
                         lineWidth: 1
                     )
             )
-            // Sombra suave para dar profundidad a la tarjeta.
-            .shadow(color: Color.black.opacity(0.12), radius: 16, x: 0, y: 8)
+            // Sombra profunda del mockup (0 18px 38px rgba(0,0,0,.34)).
+            .shadow(
+                color: Color.black.opacity(colorScheme == .dark ? 0.34 : 0.12),
+                radius: 19, x: 0, y: 9
+            )
             // Glow semántico contenido, solo si la tarjeta lo pide.
             .shadow(
-                color: (glowColor ?? .clear).opacity(glowColor == nil ? 0 : 0.18),
-                radius: 18, x: 0, y: 0
+                color: (glowColor ?? .clear).opacity(glowColor == nil ? 0 : 0.2),
+                radius: 20, x: 0, y: 0
             )
     }
 }

@@ -11,7 +11,7 @@ import SwiftUI
 struct AnimatedProgressBar: View {
     /// Progreso entre 0.0 y 1.0.
     let progress: Double
-    var tint: Color = .electricBlue
+    var tint: Color = .appCyan
     var height: CGFloat = 10
 
     /// Progreso animado interno; se mueve hacia `progress` con un resorte.

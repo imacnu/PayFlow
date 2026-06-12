@@ -76,7 +76,7 @@ struct PaywallView: View {
                 Circle()
                     .fill(LinearGradient.appAccent)
                     .frame(width: 88, height: 88)
-                    .shadow(color: Color.electricBlue.opacity(0.3), radius: 16, x: 0, y: 8)
+                    .shadow(color: Color.appCyan.opacity(0.3), radius: 16, x: 0, y: 8)
 
                 Image(systemName: "crown.fill")
                     .font(.system(size: 36, weight: .semibold))
@@ -122,7 +122,7 @@ struct PaywallView: View {
     private func benefitRow(_ text: String) -> some View {
         HStack(spacing: AppSpacing.s) {
             Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(.electricBlue)
+                .foregroundStyle(.appCyan)
             Text(text)
                 .font(.subheadline)
         }
@@ -198,7 +198,7 @@ struct PaywallView: View {
             .overlay(
                 RoundedRectangle(cornerRadius: AppRadius.card, style: .continuous)
                     .strokeBorder(
-                        isSelected ? Color.electricBlue : Color.clear,
+                        isSelected ? Color.appCyan : Color.clear,
                         lineWidth: 2
                     )
             )

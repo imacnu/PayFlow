@@ -78,15 +78,33 @@ struct MonthGridView: View {
             VStack(spacing: 3) {
                 Text("\(calendar.component(.day, from: day))")
                     .font(.system(.callout, design: .rounded).weight(isToday ? .bold : .regular))
-                    .foregroundStyle(isToday ? Color.white : Color.primary)
+                    .foregroundStyle(Color.primary)
                     .frame(width: 32, height: 32)
                     .background {
-                        // Hoy: foco con gradiente y luz. Seleccionado: anillo
-                        // neón cian vibrante.
+                        // Hoy: foco radial cian con doble anillo (exterior
+                        // cian + interior teal), como la celda activa del
+                        // mockup. Seleccionado: anillo neón cian.
                         if isToday {
-                            Circle()
-                                .fill(LinearGradient.appAccent)
-                                .glow(.appCyan, radius: 10, opacity: 0.45)
+                            ZStack {
+                                Circle()
+                                    .fill(
+                                        RadialGradient(
+                                            colors: [
+                                                Color.appCyan.opacity(0.30),
+                                                Color.appCyan.opacity(0.08)
+                                            ],
+                                            center: .center,
+                                            startRadius: 2,
+                                            endRadius: 18
+                                        )
+                                    )
+                                Circle()
+                                    .strokeBorder(Color.appCyan.opacity(0.5), lineWidth: 1)
+                                Circle()
+                                    .strokeBorder(Color.appTeal.opacity(0.38), lineWidth: 1)
+                                    .padding(3)
+                            }
+                            .glow(.appCyan, radius: 12, opacity: 0.4)
                         } else if isSelected {
                             Circle()
                                 .stroke(Color.appCyan, lineWidth: 2)

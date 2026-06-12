@@ -12,7 +12,7 @@ struct ProgressRing: View {
     /// Progreso entre 0.0 y 1.0.
     let progress: Double
     var lineWidth: CGFloat = 8
-    var tint: Color = .electricBlue
+    var tint: Color = .appCyan
     var size: CGFloat = 64
 
     /// Progreso animado interno; se mueve hacia `progress` con un resorte.

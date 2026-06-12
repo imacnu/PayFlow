@@ -96,15 +96,16 @@ struct ServicePickerView: View {
 
     // MARK: - Celdas
 
-    /// Tile limpio y equilibrado: logo protagonista, label de apoyo.
+    /// Ficha premium de marca: logo con glow temático, no solo texto.
     private func templateCell(_ template: ServiceTemplate) -> some View {
         VStack(spacing: AppSpacing.s) {
             BrandIconView(
                 symbol: template.symbol,
                 monogram: template.monogram,
                 colorHex: template.colorHex,
-                size: 52
+                size: 54
             )
+            .glow(Color(hex: template.colorHex), radius: 12, opacity: 0.35)
 
             Text(template.name)
                 .font(.caption.weight(.semibold))

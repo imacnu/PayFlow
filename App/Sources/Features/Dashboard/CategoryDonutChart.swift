@@ -27,8 +27,7 @@ struct CategoryDonutChart: View {
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.m) {
             Text("dashboard.categoryChart.title", comment: "Gasto por categoría")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .font(.system(size: 15, weight: .bold))
 
             if slices.isEmpty {
                 latentState
@@ -63,15 +62,15 @@ struct CategoryDonutChart: View {
             .frame(height: 210)
 
             // Total mensual: protagonista absoluto del módulo.
-            VStack(spacing: 2) {
+            VStack(spacing: 4) {
                 CurrencyText(
                     amount: total,
                     currencyCode: currencyCode,
-                    font: .system(.largeTitle, design: .rounded).bold()
+                    font: .system(size: 34, weight: .heavy).monospacedDigit()
                 )
                 Text("dashboard.categoryChart.perMonth", comment: "al mes")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+                    .font(.system(size: 13))
+                    .foregroundStyle(.secondary)
             }
         }
         .scaleEffect(revealed ? 1 : 0.88)

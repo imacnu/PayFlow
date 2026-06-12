@@ -72,7 +72,7 @@ struct FinancingDetailView: View {
                     .font(.title2.bold())
 
                 HStack(spacing: AppSpacing.s) {
-                    PillBadge(text: financing.provider.localizedName, tint: .electricBlue)
+                    PillBadge(text: financing.provider.localizedName, tint: .appCyan)
                     if financing.status == .completed {
                         PillBadge(
                             text: String(localized: "financing.status.completed", defaultValue: "Completada"),

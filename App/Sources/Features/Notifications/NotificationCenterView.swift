@@ -101,7 +101,7 @@ struct NotificationCenterView: View {
 
             if !notification.isRead {
                 Circle()
-                    .fill(Color.electricBlue)
+                    .fill(Color.appCyan)
                     .frame(width: 9, height: 9)
                     .padding(.top, 6)
             }
@@ -120,7 +120,7 @@ struct NotificationCenterView: View {
 
     private func tint(for type: AppNotificationType) -> Color {
         switch type {
-        case .renewalUpcoming: return .electricBlue
+        case .renewalUpcoming: return .appCyan
         case .installmentUpcoming: return .appCyan
         case .priceIncrease: return .red
         case .unusedSubscription: return .purple

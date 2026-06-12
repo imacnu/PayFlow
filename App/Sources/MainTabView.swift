@@ -47,7 +47,12 @@ struct MainTabView: View {
     /// Color de los destinos en reposo. Color explícito y legible: los
     /// estilos semánticos pierden contraste sobre el material translúcido.
     private var restingColor: Color {
-        colorScheme == .dark ? Color(hex: "9AB2C6") : Color(hex: "5A6E80")
+        colorScheme == .dark ? Color.appMuted : Color(hex: "5A6E80")
+    }
+
+    /// Color del destino activo: texto claro del mockup, no cian.
+    private var activeColor: Color {
+        colorScheme == .dark ? Color(hex: "F5FDFF") : Color(hex: "0A2A38")
     }
 
     var body: some View {
@@ -127,7 +132,7 @@ struct MainTabView: View {
                 Image(systemName: tab.symbol)
                     .font(.system(size: 17, weight: .semibold))
                     .symbolRenderingMode(.monochrome)
-                    .foregroundStyle(isActive ? Color.appCyan : restingColor)
+                    .foregroundStyle(isActive ? activeColor : restingColor)
                     .frame(width: 42, height: 30)
                     .background {
                         if isActive {
@@ -135,8 +140,8 @@ struct MainTabView: View {
                                 .fill(
                                     LinearGradient(
                                         colors: [
-                                            Color.appCyan.opacity(0.26),
-                                            Color(hex: "1EFFC8").opacity(0.16)
+                                            Color.appCyanDeep.opacity(0.26),
+                                            Color.appTeal.opacity(0.16)
                                         ],
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
@@ -149,7 +154,7 @@ struct MainTabView: View {
 
                 Text(tab.title)
                     .font(.system(size: 10, weight: isActive ? .semibold : .medium))
-                    .foregroundStyle(isActive ? Color.primary : restingColor)
+                    .foregroundStyle(isActive ? activeColor : restingColor)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }

@@ -13,12 +13,14 @@ import SwiftUI
 /// (p. ej. magenta para financiación).
 struct PrimaryButtonStyle: ButtonStyle {
     var gradient: LinearGradient = .appAccent
-    var glowColor: Color = .appCyan
+    var glowColor: Color = .appCyanDeep
+    /// Texto oscuro sobre gradiente brillante, como en el mockup (#04131C).
+    var foreground: Color = Color(hex: "04131C")
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.body.weight(.bold))
-            .foregroundStyle(.white)
+            .font(.body.weight(.heavy))
+            .foregroundStyle(foreground)
             .padding(.horizontal, AppSpacing.l)
             .frame(minHeight: 52)
             .background(gradient, in: Capsule())
@@ -65,7 +67,11 @@ extension ButtonStyle where Self == PrimaryButtonStyle {
 
     /// Variante magenta para acciones de alto impacto de financiación.
     static var primaryMagenta: PrimaryButtonStyle {
-        PrimaryButtonStyle(gradient: .magentaAccent, glowColor: .appMagenta)
+        PrimaryButtonStyle(
+            gradient: .magentaAccent,
+            glowColor: .appMagenta,
+            foreground: Color(hex: "170811")
+        )
     }
 }
 

@@ -134,10 +134,11 @@ struct SubscriptionFormView: View {
             localized: "subscriptions.form.section.data",
             defaultValue: "Datos del servicio"
         )) {
-            TextField(
-                String(localized: "subscriptions.form.name", defaultValue: "Nombre"),
-                text: $viewModel.name
-            )
+            FloatingField(
+                label: String(localized: "subscriptions.form.name", defaultValue: "Nombre")
+            ) {
+                TextField("Netflix Premium", text: $viewModel.name)
+            }
 
             Picker(
                 String(localized: "subscriptions.form.category", defaultValue: "Categoría"),
@@ -148,11 +149,12 @@ struct SubscriptionFormView: View {
                 }
             }
 
-            TextField(
-                String(localized: "subscriptions.form.price", defaultValue: "Precio"),
-                text: $viewModel.amountText
-            )
-            .keyboardType(.decimalPad)
+            FloatingField(
+                label: String(localized: "subscriptions.form.price", defaultValue: "Precio")
+            ) {
+                TextField("12,00", text: $viewModel.amountText)
+                    .keyboardType(.decimalPad)
+            }
 
             Picker(
                 String(localized: "subscriptions.form.currency", defaultValue: "Moneda"),
@@ -189,7 +191,7 @@ struct SubscriptionFormView: View {
                 ),
                 isOn: $viewModel.hasRenewalDate.animation(AppMotion.standard)
             )
-            .tint(.appCyan)
+            .tint(.appTeal)
 
             if viewModel.hasRenewalDate {
                 DatePicker(

@@ -55,7 +55,7 @@ struct AuthLandingView: View {
                 Circle()
                     .fill(LinearGradient.appAccent)
                     .frame(width: 104, height: 104)
-                    .shadow(color: Color.electricBlue.opacity(0.35), radius: 20, x: 0, y: 10)
+                    .shadow(color: Color.appCyan.opacity(0.35), radius: 20, x: 0, y: 10)
 
                 Image(systemName: "creditcard.and.123")
                     .font(.system(size: 44, weight: .semibold))
