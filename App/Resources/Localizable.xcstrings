@@ -1302,13 +1302,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Add a plan (Klarna, Aplazame…) and follow every installment with a clean, visual, surprise-free view."
+            "value": "Group your installment payments, see their monthly impact and anticipate every charge with a calm, elegant experience."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Añade un plan (Klarna, Aplazame…) y sigue cada cuota con una vista limpia, visual y sin sorpresas."
+            "value": "Agrupa tus pagos aplazados, visualiza el impacto mensual y anticipa cada cuota con una experiencia elegante y tranquila."
           }
         }
       }
@@ -1318,13 +1318,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Your installments, in total clarity"
+            "value": "Turn every purchase into clarity"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tus plazos, en claridad total"
+            "value": "Convierte cada compra en claridad"
           }
         }
       }
@@ -1645,6 +1645,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Proveedor"
+          }
+        }
+      }
+    },
+    "financing.form.savePlan": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save plan"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guardar plan"
           }
         }
       }
@@ -3542,13 +3558,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Add your first subscription and start deciding clearly what deserves to stay."
+            "value": "Add your first subscriptions to uncover patterns, savings and upcoming charges in a dashboard that feels alive."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Añade tu primera suscripción y empieza a decidir con claridad qué merece quedarse."
+            "value": "Añade tus primeras suscripciones para descubrir patrones, ahorros y próximos cobros en un panel que se siente vivo."
           }
         }
       }
@@ -3558,13 +3574,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "All your recurring spending, in plain sight"
+            "value": "Your dashboard hasn't told your story yet"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Todo tu gasto recurrente, a la vista"
+            "value": "Tu panel aún no cuenta tu historia"
           }
         }
       }

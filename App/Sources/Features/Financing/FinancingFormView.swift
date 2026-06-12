@@ -239,10 +239,13 @@ struct FinancingFormView: View {
                 Button {
                     save()
                 } label: {
-                    Text(String(localized: "common.save", defaultValue: "Guardar"))
-                        .frame(maxWidth: .infinity)
+                    Label(
+                        String(localized: "financing.form.savePlan", defaultValue: "Guardar plan"),
+                        systemImage: "checkmark.seal.fill"
+                    )
+                    .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.primary)
+                .buttonStyle(.primaryMagenta)
                 .disabled(!isValid)
                 .opacity(isValid ? 1 : 0.5)
                 .padding(.horizontal, AppSpacing.l)

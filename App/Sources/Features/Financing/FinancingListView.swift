@@ -128,13 +128,14 @@ struct FinancingListView: View {
             icon: "creditcard.fill",
             title: String(
                 localized: "financing.empty.title",
-                defaultValue: "Tus plazos, en claridad total"
+                defaultValue: "Convierte cada compra en claridad"
             ),
             message: String(
                 localized: "financing.empty.message",
-                defaultValue: "Añade un plan (Klarna, Aplazame…) y sigue cada cuota con una vista limpia, visual y sin sorpresas."
+                defaultValue: "Agrupa tus pagos aplazados, visualiza el impacto mensual y anticipa cada cuota con una experiencia elegante y tranquila."
             ),
             actionTitle: String(localized: "financing.add", defaultValue: "Añadir financiación"),
+            actionIcon: "plus",
             action: { showCreateForm = true }
         )
     }

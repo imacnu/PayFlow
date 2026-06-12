@@ -16,6 +16,8 @@ struct EmptyStateView: View {
     let title: String
     let message: String
     var actionTitle: String? = nil
+    /// Icono opcional del CTA (las acciones críticas llevan icono).
+    var actionIcon: String? = nil
     var action: (() -> Void)? = nil
 
     /// Fase de la flotación sutil del icono.
@@ -73,9 +75,15 @@ struct EmptyStateView: View {
 
             // CTA hero opcional: cierre claro de la composición.
             if let actionTitle, let action {
-                Button(actionTitle, action: action)
-                    .buttonStyle(.primary)
-                    .padding(.top, AppSpacing.s)
+                Button(action: action) {
+                    if let actionIcon {
+                        Label(actionTitle, systemImage: actionIcon)
+                    } else {
+                        Text(actionTitle)
+                    }
+                }
+                .buttonStyle(.primary)
+                .padding(.top, AppSpacing.s)
             }
         }
         .padding(AppSpacing.l)

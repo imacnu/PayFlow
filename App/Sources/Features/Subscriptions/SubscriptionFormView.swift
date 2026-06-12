@@ -57,8 +57,11 @@ struct SubscriptionFormView: View {
                         dismiss()
                     }
                 } label: {
-                    Text(String(localized: "common.save", defaultValue: "Guardar"))
-                        .frame(maxWidth: .infinity)
+                    Label(
+                        String(localized: "common.save", defaultValue: "Guardar"),
+                        systemImage: "tray.and.arrow.down.fill"
+                    )
+                    .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.primary)
                 .disabled(!viewModel.isValid)

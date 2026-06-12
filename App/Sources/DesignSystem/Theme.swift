@@ -76,6 +76,13 @@ extension LinearGradient {
         startPoint: .top,
         endPoint: .bottom
     )
+
+    /// Acento magenta→coral para acciones de alto impacto (financiación).
+    static let magentaAccent = LinearGradient(
+        colors: [.appMagenta, Color(hex: "FF667F")],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
 }
 
 // MARK: - Conveniencias para ShapeStyle

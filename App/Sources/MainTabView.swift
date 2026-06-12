@@ -9,14 +9,14 @@ struct MainTabView: View {
 
         var id: Int { rawValue }
 
-        /// Símbolo SF de la pestaña.
+        /// Símbolo SF de la pestaña (iconografía coherente de producto).
         var symbol: String {
             switch self {
-            case .dashboard: return "chart.pie.fill"
-            case .subscriptions: return "square.stack.3d.up.fill"
+            case .dashboard: return "square.grid.2x2.fill"
+            case .subscriptions: return "repeat"
             case .financing: return "creditcard.fill"
             case .calendar: return "calendar"
-            case .insights: return "lightbulb.fill"
+            case .insights: return "sparkles"
             }
         }
 
@@ -39,8 +39,16 @@ struct MainTabView: View {
 
     @State private var selection: Tab = .dashboard
 
+    @Environment(\.colorScheme) private var colorScheme
+
     /// Espacio de nombres para el deslizamiento del indicador activo.
     @Namespace private var tabIndicator
+
+    /// Color de los destinos en reposo. Color explícito y legible: los
+    /// estilos semánticos pierden contraste sobre el material translúcido.
+    private var restingColor: Color {
+        colorScheme == .dark ? Color(hex: "9AB2C6") : Color(hex: "5A6E80")
+    }
 
     var body: some View {
         // Contenedor propio en lugar de TabView: evita la barra del sistema
@@ -84,9 +92,12 @@ struct MainTabView: View {
         }
         .padding(.horizontal, AppSpacing.s)
         .padding(.vertical, AppSpacing.s)
-        .background(.ultraThinMaterial, in: Capsule())
+        .background(
+            .ultraThinMaterial,
+            in: RoundedRectangle(cornerRadius: AppRadius.large, style: .continuous)
+        )
         .overlay(
-            Capsule()
+            RoundedRectangle(cornerRadius: AppRadius.large, style: .continuous)
                 .strokeBorder(
                     LinearGradient(
                         colors: [Color.white.opacity(0.35), Color.white.opacity(0.05)],
@@ -97,10 +108,13 @@ struct MainTabView: View {
                 )
         )
         .floatingShadow()
-        .padding(.horizontal, AppSpacing.l)
+        .padding(.horizontal, AppSpacing.m)
         .padding(.bottom, AppSpacing.s)
     }
 
+    /// Destino de la barra: icono en cápsula + etiqueta corta, siempre
+    /// visibles. El activo se incrusta en una cápsula de vidrio con glow
+    /// cian; el resto queda en un tono apagado pero perfectamente legible.
     private func tabButton(_ tab: Tab) -> some View {
         let isActive = selection == tab
 
@@ -109,27 +123,38 @@ struct MainTabView: View {
                 selection = tab
             }
         } label: {
-            VStack(spacing: 3) {
+            VStack(spacing: 5) {
                 Image(systemName: tab.symbol)
-                    .font(.system(size: 19, weight: .semibold))
+                    .font(.system(size: 17, weight: .semibold))
                     .symbolRenderingMode(.monochrome)
+                    .foregroundStyle(isActive ? Color.appCyan : restingColor)
+                    .frame(width: 42, height: 30)
+                    .background {
+                        if isActive {
+                            RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous)
+                                .fill(
+                                    LinearGradient(
+                                        colors: [
+                                            Color.appCyan.opacity(0.26),
+                                            Color(hex: "1EFFC8").opacity(0.16)
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .matchedGeometryEffect(id: "activeTab", in: tabIndicator)
+                        }
+                    }
+                    .glow(isActive ? .appCyan : .clear, radius: 10, opacity: isActive ? 0.4 : 0)
 
-                // Punto de presencia bajo el icono activo.
-                Circle()
-                    .fill(Color.appCyan)
-                    .frame(width: 4, height: 4)
-                    .opacity(isActive ? 1 : 0)
+                Text(tab.title)
+                    .font(.system(size: 10, weight: isActive ? .semibold : .medium))
+                    .foregroundStyle(isActive ? Color.primary : restingColor)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
             }
-            .foregroundStyle(isActive ? Color.appCyan : Color.secondary)
-            .frame(maxWidth: .infinity, minHeight: 48)
-            .background {
-                if isActive {
-                    Capsule()
-                        .fill(Color.appCyan.opacity(0.14))
-                        .matchedGeometryEffect(id: "activeTab", in: tabIndicator)
-                }
-            }
-            .glow(isActive ? .appCyan : .clear, radius: 10, opacity: isActive ? 0.35 : 0)
+            .frame(maxWidth: .infinity, minHeight: 52)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.pressableCard)
         .accessibilityLabel(tab.title)

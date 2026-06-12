@@ -138,16 +138,17 @@ struct SubscriptionListView: View {
             icon: "square.stack.3d.up.fill",
             title: String(
                 localized: "subscriptions.empty.title",
-                defaultValue: "Todo tu gasto recurrente, a la vista"
+                defaultValue: "Tu panel aún no cuenta tu historia"
             ),
             message: String(
                 localized: "subscriptions.empty.message",
-                defaultValue: "Añade tu primera suscripción y empieza a decidir con claridad qué merece quedarse."
+                defaultValue: "Añade tus primeras suscripciones para descubrir patrones, ahorros y próximos cobros en un panel que se siente vivo."
             ),
             actionTitle: String(
                 localized: "subscriptions.empty.action",
                 defaultValue: "Añadir suscripción"
             ),
+            actionIcon: "sparkles",
             action: { showCreateForm = true }
         )
     }

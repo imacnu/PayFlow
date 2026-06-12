@@ -9,15 +9,19 @@
 import SwiftUI
 
 /// Estilo de botón principal de la app: cierre de flujo con presencia,
-/// glow controlado y respuesta táctil física.
+/// glow controlado y respuesta táctil física. Admite acento alternativo
+/// (p. ej. magenta para financiación).
 struct PrimaryButtonStyle: ButtonStyle {
+    var gradient: LinearGradient = .appAccent
+    var glowColor: Color = .appCyan
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.body.weight(.bold))
             .foregroundStyle(.white)
             .padding(.horizontal, AppSpacing.l)
             .frame(minHeight: 52)
-            .background(LinearGradient.appAccent, in: Capsule())
+            .background(gradient, in: Capsule())
             .overlay(
                 // Brillo superior sutil que refuerza la materialidad.
                 Capsule()
@@ -30,9 +34,9 @@ struct PrimaryButtonStyle: ButtonStyle {
                         lineWidth: 1
                     )
             )
-            // Glow cian de acción principal; se hunde al pulsar.
+            // Glow de acción principal; se hunde al pulsar.
             .shadow(
-                color: Color.appCyan.opacity(configuration.isPressed ? 0.2 : 0.4),
+                color: glowColor.opacity(configuration.isPressed ? 0.2 : 0.4),
                 radius: configuration.isPressed ? 8 : 16,
                 x: 0,
                 y: configuration.isPressed ? 3 : 8
@@ -58,6 +62,11 @@ struct PressableCardStyle: ButtonStyle {
 extension ButtonStyle where Self == PrimaryButtonStyle {
     /// Permite escribir `.buttonStyle(.primary)`.
     static var primary: PrimaryButtonStyle { PrimaryButtonStyle() }
+
+    /// Variante magenta para acciones de alto impacto de financiación.
+    static var primaryMagenta: PrimaryButtonStyle {
+        PrimaryButtonStyle(gradient: .magentaAccent, glowColor: .appMagenta)
+    }
 }
 
 extension ButtonStyle where Self == PressableCardStyle {
