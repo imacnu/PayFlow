@@ -58,6 +58,7 @@ targets:
     platform: iOS
     sources:
       - path: Widgets/Sources
+      - path: Widgets/Resources
     dependencies:
       - package: SubscriptionGuardianCore
     entitlements:
