@@ -129,6 +129,102 @@
         }
       }
     },
+    "appearance.dark": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dark"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oscuro"
+          }
+        }
+      }
+    },
+    "appearance.light": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claro"
+          }
+        }
+      }
+    },
+    "appearance.system": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sistema"
+          }
+        }
+      }
+    },
+    "auth.confirmPassword": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirm password"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repite la contraseña"
+          }
+        }
+      }
+    },
+    "auth.email": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Email"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Correo electrónico"
+          }
+        }
+      }
+    },
+    "auth.error.accountNotFound": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No account exists with that email."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No existe ninguna cuenta con ese correo."
+          }
+        }
+      }
+    },
     "auth.error.apple": {
       "localizations": {
         "en": {
@@ -145,6 +241,22 @@
         }
       }
     },
+    "auth.error.emailExists": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An account with that email already exists."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ya existe una cuenta con ese correo."
+          }
+        }
+      }
+    },
     "auth.error.google": {
       "localizations": {
         "en": {
@@ -157,6 +269,70 @@
           "stringUnit": {
             "state": "translated",
             "value": "No se pudo iniciar sesión con Google. Inténtalo de nuevo."
+          }
+        }
+      }
+    },
+    "auth.error.invalidCredentials": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incorrect email or password."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Correo o contraseña incorrectos."
+          }
+        }
+      }
+    },
+    "auth.error.invalidEmail": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter a valid email address."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Introduce un correo válido."
+          }
+        }
+      }
+    },
+    "auth.error.passwordMismatch": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passwords don't match."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Las contraseñas no coinciden."
+          }
+        }
+      }
+    },
+    "auth.error.weakPassword": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Password must be at least 8 characters long."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La contraseña debe tener al menos 8 caracteres."
           }
         }
       }
@@ -193,6 +369,86 @@
         }
       }
     },
+    "auth.localNote": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your account is stored securely on this device."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tu cuenta se guarda de forma segura en este dispositivo."
+          }
+        }
+      }
+    },
+    "auth.mode.login": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log in"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Iniciar sesión"
+          }
+        }
+      }
+    },
+    "auth.mode.register": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign up"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registrarse"
+          }
+        }
+      }
+    },
+    "auth.orEmail": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Or with your email"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O con tu correo"
+          }
+        }
+      }
+    },
+    "auth.password": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Password"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contraseña"
+          }
+        }
+      }
+    },
     "auth.privacy": {
       "localizations": {
         "en": {
@@ -205,6 +461,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tus datos se guardan en tu dispositivo. No compartimos tu información con terceros."
+          }
+        }
+      }
+    },
+    "auth.sheet.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your account"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tu cuenta"
+          }
+        }
+      }
+    },
+    "auth.submit.login": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log in"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entrar"
+          }
+        }
+      }
+    },
+    "auth.submit.register": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create account"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crear cuenta"
           }
         }
       }
@@ -945,22 +1249,6 @@
         }
       }
     },
-    "financing.detail.markPaid": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mark installment paid"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Marcar cuota pagada"
-          }
-        }
-      }
-    },
     "financing.detail.monthlyAmount": {
       "localizations": {
         "en": {
@@ -1009,22 +1297,6 @@
         }
       }
     },
-    "financing.detail.undoPaid": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Undo last installment"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Deshacer última cuota"
-          }
-        }
-      }
-    },
     "financing.empty.message": {
       "localizations": {
         "en": {
@@ -1053,6 +1325,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sin financiaciones"
+          }
+        }
+      }
+    },
+    "financing.form.accrued": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installments already due"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuotas ya devengadas"
+          }
+        }
+      }
+    },
+    "financing.form.accruedFooter": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installments due on or before today are automatically marked as paid."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Las cuotas con vencimiento anterior o igual a hoy se marcan automáticamente como pagadas."
+          }
+        }
+      }
+    },
+    "financing.form.accruedValue": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld of %2$lld"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld de %2$lld"
           }
         }
       }
@@ -1137,6 +1457,22 @@
         }
       }
     },
+    "financing.form.fewerInstallments": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove one installment"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quitar una cuota"
+          }
+        }
+      }
+    },
     "financing.form.firstDate": {
       "localizations": {
         "en": {
@@ -1169,18 +1505,18 @@
         }
       }
     },
-    "financing.form.installments": {
+    "financing.form.installmentsLabel": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld installments"
+            "value": "Number of installments"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld cuotas"
+            "value": "Número de cuotas"
           }
         }
       }
@@ -1261,6 +1597,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cuota mensual"
+          }
+        }
+      }
+    },
+    "financing.form.moreInstallments": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add one installment"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Añadir una cuota"
           }
         }
       }
@@ -1905,6 +2257,22 @@
         }
       }
     },
+    "language.system": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sistema"
+          }
+        }
+      }
+    },
     "notifications.empty.message": {
       "localizations": {
         "en": {
@@ -2353,6 +2721,38 @@
         }
       }
     },
+    "settings.account.signIn": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in or create an account"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Iniciar sesión o crear cuenta"
+          }
+        }
+      }
+    },
+    "settings.appearance": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appearance"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apariencia"
+          }
+        }
+      }
+    },
     "settings.data": {
       "localizations": {
         "en": {
@@ -2449,6 +2849,38 @@
         }
       }
     },
+    "settings.language": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Idioma"
+          }
+        }
+      }
+    },
+    "settings.language.footer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language changes take effect after restarting the app."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El cambio de idioma se aplica al reiniciar la app."
+          }
+        }
+      }
+    },
     "settings.notifications": {
       "localizations": {
         "en": {
@@ -2477,6 +2909,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Permitir notificaciones"
+          }
+        }
+      }
+    },
+    "settings.preferences": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preferences"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preferencias"
           }
         }
       }
@@ -2557,6 +3005,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Política de privacidad"
+          }
+        }
+      }
+    },
+    "settings.provider.email": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Email"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Correo electrónico"
           }
         }
       }

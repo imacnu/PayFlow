@@ -53,4 +53,21 @@ public enum FinancingCalculator {
         let pending = pendingInstallments(financing)
         return financing.status == .active && pending > 0 && pending <= 2
     }
+
+    /// Número de cuotas devengadas: aquellas cuya fecha de vencimiento
+    /// (primera cuota más N meses) es anterior o igual a `asOf`.
+    /// Las cuotas devengadas se consideran pagadas automáticamente.
+    public static func accruedInstallments(
+        firstInstallmentDate: Date,
+        totalInstallments: Int,
+        asOf: Date = Date(),
+        calendar: Calendar = .current
+    ) -> Int {
+        guard totalInstallments > 0 else { return 0 }
+        let start = calendar.startOfDay(for: firstInstallmentDate)
+        let today = calendar.startOfDay(for: asOf)
+        guard start <= today else { return 0 }
+        let months = calendar.dateComponents([.month], from: start, to: today).month ?? 0
+        return min(totalInstallments, months + 1)
+    }
 }

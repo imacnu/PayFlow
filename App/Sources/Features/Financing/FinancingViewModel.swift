@@ -59,16 +59,4 @@ final class FinancingViewModel {
         try? deps.financings.delete(financing)
         load()
     }
-
-    func markInstallmentPaid(_ financing: Financing) {
-        guard let deps = dependencies else { return }
-        try? deps.financings.markInstallmentPaid(financing)
-        load()
-    }
-
-    func undoInstallment(_ financing: Financing) {
-        guard let deps = dependencies else { return }
-        try? deps.financings.undoInstallment(financing)
-        load()
-    }
 }

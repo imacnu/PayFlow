@@ -26,7 +26,8 @@ struct FinancingFormView: View {
     @State private var totalAmountText = ""
     @State private var monthlyAmountText = ""
     @State private var interestText = ""
-    @State private var totalInstallments = 12
+    /// Número de cuotas como texto: admite teclado numérico y botones +/−.
+    @State private var installmentsText = "12"
     @State private var hasFirstInstallmentDate = true
     @State private var firstInstallmentDate = Date()
     @State private var notes = ""
@@ -49,6 +50,21 @@ struct FinancingFormView: View {
 
     private var monthlyAmount: Decimal? {
         Decimal(string: monthlyAmountText.replacingOccurrences(of: ",", with: "."))
+    }
+
+    /// Número de cuotas parseado del texto, acotado a un rango razonable.
+    private var totalInstallments: Int {
+        min(120, max(0, Int(installmentsText) ?? 0))
+    }
+
+    /// Cuotas ya devengadas según la fecha de la primera cuota; se marcarán
+    /// como pagadas automáticamente al guardar.
+    private var accruedInstallments: Int {
+        guard hasFirstInstallmentDate, totalInstallments > 0 else { return 0 }
+        return FinancingCalculator.accruedInstallments(
+            firstInstallmentDate: firstInstallmentDate,
+            totalInstallments: totalInstallments
+        )
     }
 
     private var isValid: Bool {
@@ -93,14 +109,7 @@ struct FinancingFormView: View {
                     )
                     .keyboardType(.decimalPad)
 
-                    Stepper(value: $totalInstallments, in: 1...60) {
-                        Text(
-                            String(
-                                localized: "financing.form.installments",
-                                defaultValue: "\(totalInstallments) cuotas"
-                            )
-                        )
-                    }
+                    installmentsRow
 
                     HStack {
                         TextField(
@@ -123,7 +132,7 @@ struct FinancingFormView: View {
                     .keyboardType(.decimalPad)
                 }
 
-                Section(String(localized: "financing.form.datesSection", defaultValue: "Fechas")) {
+                Section {
                     Toggle(
                         String(localized: "financing.form.hasFirstDate", defaultValue: "Fecha de primera cuota"),
                         isOn: $hasFirstInstallmentDate
@@ -141,6 +150,27 @@ struct FinancingFormView: View {
                                 Text(lastInstallmentDate, format: .dateTime.day().month(.abbreviated).year())
                             }
                         }
+                        if accruedInstallments > 0 {
+                            LabeledContent(
+                                String(localized: "financing.form.accrued", defaultValue: "Cuotas ya devengadas")
+                            ) {
+                                Text(
+                                    String(
+                                        localized: "financing.form.accruedValue",
+                                        defaultValue: "\(accruedInstallments) de \(totalInstallments)"
+                                    )
+                                )
+                            }
+                        }
+                    }
+                } header: {
+                    Text("financing.form.datesSection", comment: "Fechas")
+                } footer: {
+                    if hasFirstInstallmentDate {
+                        Text(
+                            "financing.form.accruedFooter",
+                            comment: "Las cuotas con vencimiento anterior o igual a hoy se marcan automáticamente como pagadas."
+                        )
                     }
                 }
 
@@ -189,7 +219,60 @@ struct FinancingFormView: View {
         }
     }
 
+    // MARK: - Componentes
+
+    /// Fila del número de cuotas: campo de texto con teclado numérico
+    /// acompañado de botones de incremento y decremento.
+    private var installmentsRow: some View {
+        HStack {
+            Text("financing.form.installmentsLabel", comment: "Número de cuotas")
+
+            Spacer()
+
+            Button {
+                adjustInstallments(by: -1)
+            } label: {
+                Image(systemName: "minus.circle.fill")
+                    .font(.title3)
+                    .foregroundStyle(totalInstallments > 1 ? Color.electricBlue : Color.secondary)
+            }
+            .buttonStyle(.borderless)
+            .disabled(totalInstallments <= 1)
+            .accessibilityLabel(
+                String(localized: "financing.form.fewerInstallments", defaultValue: "Quitar una cuota")
+            )
+
+            TextField("12", text: $installmentsText)
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.center)
+                .frame(width: 56)
+                .padding(.vertical, 4)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.secondary.opacity(0.12))
+                )
+
+            Button {
+                adjustInstallments(by: 1)
+            } label: {
+                Image(systemName: "plus.circle.fill")
+                    .font(.title3)
+                    .foregroundStyle(Color.electricBlue)
+            }
+            .buttonStyle(.borderless)
+            .accessibilityLabel(
+                String(localized: "financing.form.moreInstallments", defaultValue: "Añadir una cuota")
+            )
+        }
+    }
+
     // MARK: - Acciones
+
+    /// Ajusta el número de cuotas desde los botones +/− manteniendo el texto.
+    private func adjustInstallments(by delta: Int) {
+        let current = Int(installmentsText) ?? 0
+        installmentsText = "\(min(120, max(1, current + delta)))"
+    }
 
     /// Sugerencia de cuota: importe total dividido entre el número de cuotas.
     private func suggestMonthlyAmount() {
@@ -205,7 +288,7 @@ struct FinancingFormView: View {
         totalAmountText = "\(financing.totalAmount)"
         monthlyAmountText = "\(financing.monthlyAmount)"
         interestText = financing.interestRate == 0 ? "" : "\(financing.interestRate)"
-        totalInstallments = financing.totalInstallments
+        installmentsText = "\(financing.totalInstallments)"
         hasFirstInstallmentDate = financing.firstInstallmentDate != nil
         firstInstallmentDate = financing.firstInstallmentDate ?? Date()
         notes = financing.notes

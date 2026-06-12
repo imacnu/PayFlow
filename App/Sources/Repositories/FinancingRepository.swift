@@ -21,8 +21,6 @@ protocol FinancingRepositoryProtocol: AnyObject {
     func active() throws -> [Financing]
     func create(from draft: FinancingDraft) throws -> Financing
     func update(_ financing: Financing, with draft: FinancingDraft) throws
-    func markInstallmentPaid(_ financing: Financing) throws
-    func undoInstallment(_ financing: Financing) throws
     func delete(_ financing: Financing) throws
     func summaries() throws -> [FinancingSummary]
 }
@@ -47,11 +45,21 @@ final class SwiftDataFinancingRepository: FinancingRepositoryProtocol {
         self.onChange = onChange
     }
 
+    /// Todas las financiaciones, con las cuotas devengadas sincronizadas:
+    /// el paso del tiempo marca como pagadas las cuotas ya vencidas.
     func all() throws -> [Financing] {
         let descriptor = FetchDescriptor<Financing>(
             sortBy: [SortDescriptor(\Financing.merchant)]
         )
-        return try context.fetch(descriptor)
+        let financings = try context.fetch(descriptor)
+        var changed = false
+        for financing in financings where syncAccruedInstallments(financing) {
+            changed = true
+        }
+        // Sin `onChange()`: este método se invoca desde la propia propagación
+        // de cambios y volver a dispararla provocaría reentradas.
+        if changed { try context.save() }
+        return financings
     }
 
     /// Financiaciones activas. Filtrado en memoria por las mismas razones
@@ -83,29 +91,6 @@ final class SwiftDataFinancingRepository: FinancingRepositoryProtocol {
         onChange()
     }
 
-    /// Marca una cuota como pagada. Al llegar al total, la financiación
-    /// pasa a estado completado.
-    func markInstallmentPaid(_ financing: Financing) throws {
-        guard financing.paidInstallments < financing.totalInstallments else { return }
-        financing.paidInstallments += 1
-        if financing.paidInstallments >= financing.totalInstallments {
-            financing.status = .completed
-        }
-        try context.save()
-        onChange()
-    }
-
-    /// Deshace la última cuota pagada y reactiva la financiación si estaba completada.
-    func undoInstallment(_ financing: Financing) throws {
-        guard financing.paidInstallments > 0 else { return }
-        financing.paidInstallments -= 1
-        if financing.status == .completed {
-            financing.status = .active
-        }
-        try context.save()
-        onChange()
-    }
-
     func delete(_ financing: Financing) throws {
         context.delete(financing)
         try context.save()
@@ -118,7 +103,8 @@ final class SwiftDataFinancingRepository: FinancingRepositoryProtocol {
 
     // MARK: - Privado
 
-    /// Vuelca los campos del borrador en el modelo.
+    /// Vuelca los campos del borrador en el modelo y recalcula las cuotas
+    /// devengadas a partir de la fecha de primera cuota.
     private func apply(_ draft: FinancingDraft, to financing: Financing) {
         financing.merchant = draft.merchant
         financing.provider = draft.provider
@@ -128,5 +114,29 @@ final class SwiftDataFinancingRepository: FinancingRepositoryProtocol {
         financing.totalInstallments = max(1, draft.totalInstallments)
         financing.firstInstallmentDate = draft.firstInstallmentDate
         financing.notes = draft.notes
+        _ = syncAccruedInstallments(financing)
+    }
+
+    /// Sincroniza las cuotas pagadas con las devengadas por el paso del tiempo
+    /// (vencimiento anterior o igual a hoy). Devuelve `true` si hubo cambios.
+    @discardableResult
+    private func syncAccruedInstallments(_ financing: Financing) -> Bool {
+        guard financing.status != .cancelled,
+              let firstDate = financing.firstInstallmentDate else {
+            return false
+        }
+        let accrued = FinancingCalculator.accruedInstallments(
+            firstInstallmentDate: firstDate,
+            totalInstallments: financing.totalInstallments
+        )
+        let newStatus: FinancingStatus = accrued >= financing.totalInstallments
+            ? .completed
+            : .active
+        guard financing.paidInstallments != accrued || financing.status != newStatus else {
+            return false
+        }
+        financing.paidInstallments = accrued
+        financing.status = newStatus
+        return true
     }
 }

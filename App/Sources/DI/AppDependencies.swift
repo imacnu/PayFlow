@@ -121,15 +121,12 @@ final class AppDependencies {
         financing.totalAmount = Decimal(string: "498.00") ?? 0
         financing.monthlyAmount = Decimal(string: "41.50") ?? 0
         financing.totalInstallments = 12
+        // Tres meses transcurridos: las cuotas vencidas se devengan solas.
         financing.firstInstallmentDate = calendar.date(byAdding: .month, value: -3, to: now)
 
         _ = try? subscriptions.create(from: netflix)
         _ = try? subscriptions.create(from: spotify)
         _ = try? subscriptions.create(from: icloud)
-        if let created = try? financings.create(from: financing) {
-            try? financings.markInstallmentPaid(created)
-            try? financings.markInstallmentPaid(created)
-            try? financings.markInstallmentPaid(created)
-        }
+        _ = try? financings.create(from: financing)
     }
 }

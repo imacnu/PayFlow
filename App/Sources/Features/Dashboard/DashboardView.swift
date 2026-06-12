@@ -40,14 +40,16 @@ struct DashboardView: View {
             .appBackground()
             .navigationTitle(Text("tab.dashboard", comment: "Panel"))
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
+                ToolbarItem(placement: .topBarTrailing) {
                     notificationBell
                 }
-                ToolbarItem(placement: .secondaryAction) {
+                // El botón de tres puntos abre directamente los Ajustes de
+                // usuario, sin menú intermedio.
+                ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showSettings = true
                     } label: {
-                        Image(systemName: "gearshape.fill")
+                        Image(systemName: "ellipsis.circle")
                     }
                     .accessibilityLabel(
                         String(localized: "settings.title", defaultValue: "Ajustes")

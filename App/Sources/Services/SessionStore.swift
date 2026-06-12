@@ -8,6 +8,7 @@ enum AuthState: Codable, Equatable {
     case guest
     case apple(userID: String)
     case google(email: String)
+    case email(email: String)
 }
 
 /// Almacén de sesión: mantiene el estado de autenticación, lo persiste en
@@ -32,7 +33,7 @@ final class SessionStore {
     var displayName: String {
         if !storedDisplayName.isEmpty { return storedDisplayName }
         switch state {
-        case .google(let email):
+        case .google(let email), .email(let email):
             return email
         case .apple:
             return email ?? String(
@@ -54,7 +55,7 @@ final class SessionStore {
     /// Datos no sensibles persistidos en UserDefaults.
     private struct PersistedSession: Codable {
         enum Kind: String, Codable {
-            case guest, apple, google
+            case guest, apple, google, email
         }
         var kind: Kind
         var email: String?
@@ -79,6 +80,8 @@ final class SessionStore {
             state = .guest
         case .google:
             state = .google(email: persisted.email ?? "")
+        case .email:
+            state = .email(email: persisted.email ?? "")
         case .apple:
             guard let userID = KeychainHelper.get(Self.appleUserIDKey) else {
                 signOut()
@@ -120,6 +123,15 @@ final class SessionStore {
         storedDisplayName = displayName ?? ""
         state = .google(email: googleEmail)
         persist(kind: .google)
+    }
+
+    /// Inicia sesión con una cuenta de correo y contraseña ya verificada
+    /// por `EmailAuthService`.
+    func signIn(emailAccount: String) {
+        email = emailAccount
+        storedDisplayName = ""
+        state = .email(email: emailAccount)
+        persist(kind: .email)
     }
 
     /// Cierra la sesión y elimina toda la información persistida.

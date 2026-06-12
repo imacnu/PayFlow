@@ -83,12 +83,6 @@ struct ServicePickerView: View {
                 .font(.caption.weight(.semibold))
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
-
-            if let price = template.suggestedMonthlyPrice {
-                Text(price, format: .currency(code: "EUR"))
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-            }
         }
         .frame(maxWidth: .infinity)
         .glassCard(cornerRadius: AppRadius.control, padding: AppSpacing.s)

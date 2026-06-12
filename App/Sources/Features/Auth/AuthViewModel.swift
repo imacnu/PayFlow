@@ -71,4 +71,72 @@ final class AuthViewModel {
     func signInAsGuest() {
         deps?.session.signInAsGuest()
     }
+
+    // MARK: - Correo y contraseña
+
+    /// Crea una cuenta local con correo y contraseña e inicia sesión.
+    /// Devuelve `true` si el registro fue correcto.
+    func register(email: String, password: String, confirmation: String) -> Bool {
+        guard let deps else { return false }
+        guard password == confirmation else {
+            errorMessage = String(
+                localized: "auth.error.passwordMismatch",
+                defaultValue: "Las contraseñas no coinciden."
+            )
+            return false
+        }
+        do {
+            try EmailAuthService.register(email: email, password: password)
+            try EmailAuthService.signIn(email: email, password: password)
+            deps.session.signIn(emailAccount: email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased())
+            errorMessage = nil
+            return true
+        } catch {
+            errorMessage = Self.message(for: error)
+            return false
+        }
+    }
+
+    /// Inicia sesión con una cuenta de correo existente.
+    /// Devuelve `true` si las credenciales son válidas.
+    func signInWithEmail(email: String, password: String) -> Bool {
+        guard let deps else { return false }
+        do {
+            try EmailAuthService.signIn(email: email, password: password)
+            deps.session.signIn(emailAccount: email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased())
+            errorMessage = nil
+            return true
+        } catch {
+            errorMessage = Self.message(for: error)
+            return false
+        }
+    }
+
+    /// Traduce los errores de autenticación por correo a mensajes mostrables.
+    private static func message(for error: Error) -> String {
+        switch error as? EmailAuthError {
+        case .invalidEmail:
+            return String(localized: "auth.error.invalidEmail", defaultValue: "Introduce un correo válido.")
+        case .weakPassword:
+            return String(
+                localized: "auth.error.weakPassword",
+                defaultValue: "La contraseña debe tener al menos 8 caracteres."
+            )
+        case .accountExists:
+            return String(
+                localized: "auth.error.emailExists",
+                defaultValue: "Ya existe una cuenta con ese correo."
+            )
+        case .accountNotFound:
+            return String(
+                localized: "auth.error.accountNotFound",
+                defaultValue: "No existe ninguna cuenta con ese correo."
+            )
+        case .invalidCredentials, nil:
+            return String(
+                localized: "auth.error.invalidCredentials",
+                defaultValue: "Correo o contraseña incorrectos."
+            )
+        }
+    }
 }

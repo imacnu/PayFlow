@@ -183,37 +183,10 @@ struct FinancingDetailView: View {
         .glassCard()
     }
 
+    // Las cuotas se marcan como pagadas automáticamente por el paso del
+    // tiempo según la fecha de la primera cuota; no hay acciones manuales.
     private var actionsSection: some View {
         VStack(spacing: AppSpacing.s) {
-            if financing.status != .completed {
-                Button {
-                    withAnimation(.spring) {
-                        try? deps?.financings.markInstallmentPaid(financing)
-                    }
-                } label: {
-                    Label(
-                        String(localized: "financing.detail.markPaid", defaultValue: "Marcar cuota pagada"),
-                        systemImage: "checkmark.circle.fill"
-                    )
-                    .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.primary)
-            }
-
-            if financing.paidInstallments > 0 {
-                Button {
-                    withAnimation(.spring) {
-                        try? deps?.financings.undoInstallment(financing)
-                    }
-                } label: {
-                    Label(
-                        String(localized: "financing.detail.undoPaid", defaultValue: "Deshacer última cuota"),
-                        systemImage: "arrow.uturn.backward"
-                    )
-                }
-                .font(.subheadline)
-            }
-
             Button(role: .destructive) {
                 showDeleteConfirmation = true
             } label: {

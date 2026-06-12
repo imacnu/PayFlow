@@ -101,6 +101,7 @@ final class SubscriptionFormViewModel {
     // MARK: - Plantillas
 
     /// Precarga los campos desde una plantilla del catálogo de servicios.
+    /// El precio no se precarga: lo introduce el usuario manualmente.
     func apply(template: ServiceTemplate) {
         let draft = SubscriptionDraft.from(template: template)
         name = draft.name
@@ -108,9 +109,6 @@ final class SubscriptionFormViewModel {
         iconSymbol = draft.iconSymbol
         colorHex = draft.colorHex
         monogram = draft.monogram
-        if draft.amount > 0 {
-            amountText = "\(draft.amount)"
-        }
     }
 
     // MARK: - Guardado

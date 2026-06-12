@@ -7,6 +7,9 @@ struct SubscriptionGuardianApp: App {
     /// Dependencias de la app, construidas una sola vez al arrancar.
     @State private var deps: AppDependencies
 
+    /// Apariencia preferida (sistema, claro u oscuro).
+    @AppStorage(AppAppearance.storageKey) private var appearanceRaw = AppAppearance.system.rawValue
+
     init() {
         let container = ModelContainerFactory.make()
         let dependencies = AppDependencies(container: container)
@@ -18,6 +21,7 @@ struct SubscriptionGuardianApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .preferredColorScheme((AppAppearance(rawValue: appearanceRaw) ?? .system).colorScheme)
                 .environment(\.dependencies, deps)
                 .modelContainer(deps.container)
                 .task {

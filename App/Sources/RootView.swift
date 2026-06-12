@@ -20,7 +20,7 @@ struct RootView: View {
             switch deps.session.state {
             case .signedOut:
                 AuthLandingView()
-            case .guest, .apple, .google:
+            case .guest, .apple, .google, .email:
                 MainTabView()
             }
         }

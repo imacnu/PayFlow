@@ -19,11 +19,11 @@ struct SubscriptionDraft {
     var monogram: String = ""
 
     /// Crea un borrador precargado desde una plantilla del catálogo de servicios.
+    /// El importe se deja a cero: el precio lo introduce siempre el usuario.
     static func from(template: ServiceTemplate) -> SubscriptionDraft {
         var draft = SubscriptionDraft()
         draft.name = template.name
         draft.category = template.category
-        draft.amount = template.suggestedMonthlyPrice ?? 0
         draft.iconSymbol = template.symbol ?? "sparkles"
         draft.colorHex = template.colorHex
         draft.monogram = template.monogram

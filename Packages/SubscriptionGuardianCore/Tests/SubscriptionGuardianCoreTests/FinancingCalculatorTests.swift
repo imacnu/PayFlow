@@ -78,6 +78,41 @@ final class FinancingCalculatorTests: XCTestCase {
         XCTAssertEqual(FinancingCalculator.progress(makeFinancing(total: 0, paid: 0)), 0.0, accuracy: 0.0001)
     }
 
+    func testAccruedInstallments() {
+        // La primera cuota vence el mismo día: cuenta como devengada.
+        XCTAssertEqual(
+            FinancingCalculator.accruedInstallments(
+                firstInstallmentDate: date(2026, 6, 12), totalInstallments: 12,
+                asOf: date(2026, 6, 12), calendar: calendar
+            ),
+            1
+        )
+        // Tres meses transcurridos: cuatro cuotas devengadas (meses 0..3).
+        XCTAssertEqual(
+            FinancingCalculator.accruedInstallments(
+                firstInstallmentDate: date(2026, 3, 5), totalInstallments: 12,
+                asOf: date(2026, 6, 12), calendar: calendar
+            ),
+            4
+        )
+        // Primera cuota en el futuro: ninguna devengada.
+        XCTAssertEqual(
+            FinancingCalculator.accruedInstallments(
+                firstInstallmentDate: date(2026, 7, 1), totalInstallments: 12,
+                asOf: date(2026, 6, 12), calendar: calendar
+            ),
+            0
+        )
+        // Financiación antigua: se recorta al total de cuotas.
+        XCTAssertEqual(
+            FinancingCalculator.accruedInstallments(
+                firstInstallmentDate: date(2020, 1, 1), totalInstallments: 12,
+                asOf: date(2026, 6, 12), calendar: calendar
+            ),
+            12
+        )
+    }
+
     func testIsAlmostFinishedBoundaries() {
         XCTAssertTrue(FinancingCalculator.isAlmostFinished(makeFinancing(total: 12, paid: 10)))  // quedan 2
         XCTAssertTrue(FinancingCalculator.isAlmostFinished(makeFinancing(total: 12, paid: 11)))  // queda 1

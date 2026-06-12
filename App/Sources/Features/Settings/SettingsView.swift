@@ -15,11 +15,17 @@ struct SettingsView: View {
     @State private var viewModel = SettingsViewModel()
     @State private var showPaywall = false
     @State private var showSignOutConfirmation = false
+    @State private var showAccountSheet = false
+
+    /// Preferencias de apariencia e idioma persistidas en UserDefaults.
+    @AppStorage(AppAppearance.storageKey) private var appearanceRaw = AppAppearance.system.rawValue
+    @AppStorage(AppLanguage.storageKey) private var languageRaw = AppLanguage.system.rawValue
 
     var body: some View {
         NavigationStack {
             Form {
                 accountSection
+                preferencesSection
                 premiumSection
                 dataSection
                 notificationsSection
@@ -30,6 +36,9 @@ struct SettingsView: View {
             .navigationTitle(Text("settings.title", comment: "Ajustes"))
             .sheet(isPresented: $showPaywall, onDismiss: { viewModel.load() }) {
                 PaywallView()
+            }
+            .sheet(isPresented: $showAccountSheet, onDismiss: { viewModel.load() }) {
+                AccountAuthSheet()
             }
             .confirmationDialog(
                 String(localized: "settings.signOut.confirm", defaultValue: "¿Cerrar sesión?"),
@@ -75,6 +84,18 @@ struct SettingsView: View {
                 )
                 .font(.caption)
                 .foregroundStyle(.secondary)
+
+                Button {
+                    showAccountSheet = true
+                } label: {
+                    Label(
+                        String(
+                            localized: "settings.account.signIn",
+                            defaultValue: "Iniciar sesión o crear cuenta"
+                        ),
+                        systemImage: "person.badge.key.fill"
+                    )
+                }
             }
 
             Button(role: .destructive) {
@@ -91,10 +112,45 @@ struct SettingsView: View {
             return "Apple"
         case .google?:
             return "Google"
+        case .email?:
+            return String(localized: "settings.provider.email", defaultValue: "Correo electrónico")
         case .guest?:
             return String(localized: "settings.provider.guest", defaultValue: "Invitado")
         default:
             return ""
+        }
+    }
+
+    /// Preferencias de la app: apariencia e idioma de la interfaz.
+    private var preferencesSection: some View {
+        Section {
+            Picker(
+                String(localized: "settings.appearance", defaultValue: "Apariencia"),
+                selection: $appearanceRaw
+            ) {
+                ForEach(AppAppearance.allCases) { appearance in
+                    Text(appearance.localizedName).tag(appearance.rawValue)
+                }
+            }
+
+            Picker(
+                String(localized: "settings.language", defaultValue: "Idioma"),
+                selection: $languageRaw
+            ) {
+                ForEach(AppLanguage.allCases) { language in
+                    Text(language.displayName).tag(language.rawValue)
+                }
+            }
+            .onChange(of: languageRaw) { _, newValue in
+                (AppLanguage(rawValue: newValue) ?? .system).apply()
+            }
+        } header: {
+            Text("settings.preferences", comment: "Preferencias")
+        } footer: {
+            Text(
+                "settings.language.footer",
+                comment: "El cambio de idioma se aplica al reiniciar la app."
+            )
         }
     }
 
