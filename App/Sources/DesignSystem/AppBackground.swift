@@ -2,48 +2,62 @@
 //  AppBackground.swift
 //  Subscription Guardian
 //
-//  Fondo en capas de la app: color base más círculos difuminados de acento,
-//  adaptado automáticamente a modo claro y oscuro.
+//  Fondo atmosférico de la app: degradado profundo (azul petróleo → verde
+//  azulado, nunca negro puro) con manchas de luz difuminadas que dan vida
+//  y profundidad. Se adapta a modo claro y oscuro.
 //
 
 import SwiftUI
 
-/// Fondo decorativo de la app con color base y manchas de gradiente difuminadas.
+/// Fondo decorativo en capas: degradado base + luz ambiental difuminada.
 struct AppBackground: View {
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         GeometryReader { proxy in
             ZStack {
-                // Color base según el esquema de color.
-                (colorScheme == .dark ? Color.graphite : Color.crystalWhite)
+                // Degradado base: superficie rica en profundidad, con
+                // transición tonal para que el fondo "respire".
+                if colorScheme == .dark {
+                    LinearGradient(
+                        colors: [.deepPetrol, .darkTeal, Color(hex: "111A24")],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                } else {
+                    LinearGradient(
+                        colors: [.crystalWhite, Color(hex: "EAF2F6")],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                }
 
-                // Mancha azul superior izquierda.
+                // Luz cian superior izquierda: foco principal de atmósfera.
                 Circle()
-                    .fill(Color.electricBlue.opacity(0.25))
+                    .fill(Color.appCyan.opacity(colorScheme == .dark ? 0.16 : 0.22))
                     .frame(width: proxy.size.width * 0.9,
                            height: proxy.size.width * 0.9)
                     .position(x: proxy.size.width * 0.15,
                               y: proxy.size.height * 0.05)
-                    .blur(radius: 80)
+                    .blur(radius: 90)
 
-                // Mancha cian a la derecha.
+                // Azul eléctrico a la derecha, zona media.
                 Circle()
-                    .fill(Color.appCyan.opacity(0.25))
+                    .fill(Color.electricBlue.opacity(colorScheme == .dark ? 0.18 : 0.20))
                     .frame(width: proxy.size.width * 0.8,
                            height: proxy.size.width * 0.8)
                     .position(x: proxy.size.width * 0.95,
                               y: proxy.size.height * 0.35)
-                    .blur(radius: 80)
+                    .blur(radius: 90)
 
-                // Mancha azul inferior para equilibrar la composición.
+                // Verde azulado inferior para cerrar la composición en calma.
                 Circle()
-                    .fill(Color.electricBlue.opacity(0.18))
+                    .fill(Color(hex: "1C6E63").opacity(colorScheme == .dark ? 0.22 : 0.14))
                     .frame(width: proxy.size.width * 0.9,
                            height: proxy.size.width * 0.9)
                     .position(x: proxy.size.width * 0.3,
                               y: proxy.size.height * 0.95)
-                    .blur(radius: 80)
+                    .blur(radius: 90)
             }
         }
         .ignoresSafeArea()

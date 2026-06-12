@@ -2,7 +2,9 @@
 //  ServicePickerView.swift
 //  Subscription Guardian
 //
-//  Selector de servicios populares del catálogo para el alta rápida.
+//  Galería de servicios populares: cuadrícula editorial, rápida de escanear
+//  y agradable de tocar. El servicio personalizado es una alternativa
+//  valiosa, no un fallback.
 //
 
 import SwiftUI
@@ -29,26 +31,50 @@ struct ServicePickerView: View {
                         } label: {
                             templateCell(template)
                         }
-                        .buttonStyle(.plain)
+                        .buttonStyle(.pressableCard)
                     }
                 }
                 .padding(AppSpacing.m)
 
-                // Opción para crear un servicio desde cero.
+                // Alternativa valiosa: crear un servicio desde cero.
                 Button {
                     dismiss()
                 } label: {
-                    HStack(spacing: AppSpacing.s) {
-                        Image(systemName: "plus.circle.fill")
-                        Text(String(
-                            localized: "subscriptions.picker.custom",
-                            defaultValue: "Servicio personalizado"
-                        ))
+                    HStack(spacing: AppSpacing.m) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous)
+                                .fill(LinearGradient.appAccent)
+                                .frame(width: 40, height: 40)
+                            Image(systemName: "plus")
+                                .font(.body.weight(.bold))
+                                .foregroundStyle(.white)
+                        }
+                        .glow(.appCyan, radius: 8, opacity: 0.35)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(String(
+                                localized: "subscriptions.picker.custom",
+                                defaultValue: "Servicio personalizado"
+                            ))
+                            .font(.subheadline.weight(.semibold))
+                            Text(String(
+                                localized: "subscriptions.picker.customHint",
+                                defaultValue: "Crea cualquier servicio a tu medida"
+                            ))
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "chevron.right")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.secondary)
                     }
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: 24)
+                    .frame(maxWidth: .infinity)
+                    .glassCard(cornerRadius: AppRadius.medium, padding: AppSpacing.sm)
                 }
-                .glassCard(cornerRadius: AppRadius.control, padding: 12)
+                .buttonStyle(.pressableCard)
                 .padding(.horizontal, AppSpacing.m)
                 .padding(.bottom, AppSpacing.l)
             }
@@ -70,13 +96,14 @@ struct ServicePickerView: View {
 
     // MARK: - Celdas
 
+    /// Tile limpio y equilibrado: logo protagonista, label de apoyo.
     private func templateCell(_ template: ServiceTemplate) -> some View {
         VStack(spacing: AppSpacing.s) {
             BrandIconView(
                 symbol: template.symbol,
                 monogram: template.monogram,
                 colorHex: template.colorHex,
-                size: 48
+                size: 52
             )
 
             Text(template.name)
@@ -85,7 +112,8 @@ struct ServicePickerView: View {
                 .minimumScaleFactor(0.8)
         }
         .frame(maxWidth: .infinity)
-        .glassCard(cornerRadius: AppRadius.control, padding: AppSpacing.s)
+        .padding(.vertical, AppSpacing.xxs)
+        .glassCard(cornerRadius: AppRadius.medium, padding: AppSpacing.s)
     }
 }
 

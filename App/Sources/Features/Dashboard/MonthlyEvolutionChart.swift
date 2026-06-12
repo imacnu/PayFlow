@@ -2,7 +2,8 @@
 //  MonthlyEvolutionChart.swift
 //  Subscription Guardian
 //
-//  Gráfico de barras con la evolución del gasto mensual de los últimos meses.
+//  Evolución del gasto mensual como columnas luminosas: la rejilla casi
+//  desaparece y queda solo la referencia necesaria.
 //
 
 import SwiftUI
@@ -19,34 +20,50 @@ struct MonthlyEvolutionChart: View {
     }
 
     var body: some View {
-        GlassCard {
-            VStack(alignment: .leading, spacing: AppSpacing.m) {
-                Text("dashboard.evolutionChart.title", comment: "Evolución mensual")
-                    .font(.headline)
+        VStack(alignment: .leading, spacing: AppSpacing.m) {
+            Text("dashboard.evolutionChart.title", comment: "Evolución mensual")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
 
-                if points.isEmpty {
-                    Text("dashboard.evolutionChart.empty", comment: "Sin histórico todavía")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity, minHeight: 100)
-                } else {
-                    Chart(points, id: \.monthStart) { point in
-                        BarMark(
-                            x: .value("Mes", point.monthStart, unit: .month),
-                            y: .value("Total", doubleValue(point.total))
-                        )
-                        .foregroundStyle(LinearGradient.appAccent)
-                        .cornerRadius(6)
-                    }
-                    .chartXAxis {
-                        AxisMarks(values: .stride(by: .month)) { _ in
-                            AxisValueLabel(format: .dateTime.month(.abbreviated))
-                        }
-                    }
-                    .frame(height: 160)
+            if points.isEmpty {
+                Text(
+                    "dashboard.evolutionChart.empty",
+                    comment: "Tu evolución mensual se dibujará aquí con el tiempo."
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, minHeight: 100)
+            } else {
+                Chart(points, id: \.monthStart) { point in
+                    BarMark(
+                        x: .value("Mes", point.monthStart, unit: .month),
+                        y: .value("Total", doubleValue(point.total)),
+                        width: .ratio(0.45)
+                    )
+                    .foregroundStyle(LinearGradient.luminousColumn)
+                    .cornerRadius(8)
                 }
+                .chartXAxis {
+                    AxisMarks(values: .stride(by: .month)) { _ in
+                        AxisValueLabel(format: .dateTime.month(.abbreviated))
+                            .font(.caption2)
+                            .foregroundStyle(Color.secondary)
+                    }
+                }
+                // Rejilla mínima: solo la referencia necesaria, sin ruido.
+                .chartYAxis {
+                    AxisMarks(position: .leading, values: .automatic(desiredCount: 3)) { _ in
+                        AxisGridLine()
+                            .foregroundStyle(Color.white.opacity(0.06))
+                        AxisValueLabel()
+                            .font(.caption2)
+                            .foregroundStyle(Color.secondary.opacity(0.7))
+                    }
+                }
+                .frame(height: 160)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassCard()
     }
 }

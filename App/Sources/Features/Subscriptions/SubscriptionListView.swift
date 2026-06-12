@@ -63,6 +63,7 @@ struct SubscriptionListView: View {
         ScrollView {
             LazyVStack(spacing: AppSpacing.m) {
                 header
+                    .cascadeIn(0)
 
                 ForEach(viewModel.filteredSubscriptions, id: \.id) { subscription in
                     NavigationLink {
@@ -84,6 +85,7 @@ struct SubscriptionListView: View {
                 }
             }
             .padding(AppSpacing.m)
+            .padding(.bottom, AppSpacing.xxl + AppSpacing.l)
         }
         .searchable(
             text: $viewModel.searchText,
@@ -130,16 +132,17 @@ struct SubscriptionListView: View {
         }
     }
 
+    /// Vacío inspirador: construye valor percibido desde el primer uso.
     private var emptyState: some View {
         EmptyStateView(
             icon: "square.stack.3d.up.fill",
             title: String(
                 localized: "subscriptions.empty.title",
-                defaultValue: "Sin suscripciones"
+                defaultValue: "Todo tu gasto recurrente, a la vista"
             ),
             message: String(
                 localized: "subscriptions.empty.message",
-                defaultValue: "Añade tu primera suscripción para empezar a controlar tu gasto mensual."
+                defaultValue: "Añade tu primera suscripción y empieza a decidir con claridad qué merece quedarse."
             ),
             actionTitle: String(
                 localized: "subscriptions.empty.action",
@@ -181,7 +184,7 @@ struct SubscriptionRowView: View {
                                 localized: "subscriptions.status.paused",
                                 defaultValue: "Pausada"
                             ),
-                            tint: .orange
+                            tint: .appAmber
                         )
                     }
                 }

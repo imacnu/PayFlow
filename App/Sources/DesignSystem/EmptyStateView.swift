@@ -2,13 +2,14 @@
 //  EmptyStateView.swift
 //  Subscription Guardian
 //
-//  Vista de estado vacío con icono destacado, mensaje y acción opcional.
+//  Estado vacío hero: composición central con glow y flotación sutil,
+//  copy inspirador y CTA principal. El vacío también diseña percepción.
 //
 
 import SwiftUI
 
-/// Estado vacío centrado: icono grande sobre círculo con gradiente,
-/// título, mensaje y un botón de acción opcional.
+/// Estado vacío centrado: icono grande flotando sobre un halo de luz,
+/// título, mensaje y un botón de acción opcional con estilo hero.
 struct EmptyStateView: View {
     /// Nombre de un SF Symbol.
     let icon: String
@@ -17,19 +18,46 @@ struct EmptyStateView: View {
     var actionTitle: String? = nil
     var action: (() -> Void)? = nil
 
+    /// Fase de la flotación sutil del icono.
+    @State private var floating = false
+
     var body: some View {
         VStack(spacing: AppSpacing.m) {
-            // Símbolo grande dentro de un círculo con el gradiente de acento.
+            // Composición hero: halo difuminado + cápsula con gradiente
+            // y flotación lenta que da vida al vacío.
             ZStack {
+                // Halo de luz ambiental detrás del icono.
+                Circle()
+                    .fill(Color.appCyan.opacity(0.25))
+                    .frame(width: 140, height: 140)
+                    .blur(radius: 40)
+
                 Circle()
                     .fill(LinearGradient.appAccent)
-                    .frame(width: 88, height: 88)
-                    .shadow(color: Color.electricBlue.opacity(0.3), radius: 16, x: 0, y: 8)
+                    .frame(width: 92, height: 92)
+                    .overlay(
+                        Circle()
+                            .strokeBorder(
+                                LinearGradient(
+                                    colors: [Color.white.opacity(0.55), Color.white.opacity(0.0)],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ),
+                                lineWidth: 1
+                            )
+                    )
+                    .glow(.appCyan, radius: 20, opacity: 0.4)
 
                 Image(systemName: icon)
-                    .font(.system(size: 36, weight: .semibold))
+                    .font(.system(size: 38, weight: .semibold))
                     .foregroundStyle(.white)
             }
+            .offset(y: floating ? -6 : 6)
+            .animation(
+                .easeInOut(duration: 2.6).repeatForever(autoreverses: true),
+                value: floating
+            )
+            .onAppear { floating = true }
 
             VStack(spacing: AppSpacing.s) {
                 Text(title)
@@ -40,9 +68,10 @@ struct EmptyStateView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
+                    .padding(.horizontal, AppSpacing.s)
             }
 
-            // Botón de acción opcional con el estilo principal.
+            // CTA hero opcional: cierre claro de la composición.
             if let actionTitle, let action {
                 Button(actionTitle, action: action)
                     .buttonStyle(.primary)
@@ -69,4 +98,5 @@ struct EmptyStateView: View {
         )
         .padding(AppSpacing.l)
     }
+    .preferredColorScheme(.dark)
 }

@@ -20,22 +20,26 @@ struct DashboardView: View {
             ScrollView {
                 VStack(spacing: AppSpacing.m) {
                     kpiGrid
+                        .cascadeIn(0)
 
                     CategoryDonutChart(
                         slices: viewModel.categorySlices,
                         total: viewModel.monthlyTotal,
                         currencyCode: viewModel.currencyCode
                     )
+                    .cascadeIn(1)
 
                     MonthlyEvolutionChart(
                         points: viewModel.evolution,
                         currencyCode: viewModel.currencyCode
                     )
+                    .cascadeIn(2)
 
                     UpcomingPaymentsSection(items: viewModel.upcomingPayments)
+                        .cascadeIn(3)
                 }
                 .padding(.horizontal, AppSpacing.m)
-                .padding(.bottom, AppSpacing.xl)
+                .padding(.bottom, AppSpacing.xxl + AppSpacing.l)
             }
             .appBackground()
             .navigationTitle(Text("tab.dashboard", comment: "Panel"))
@@ -97,23 +101,26 @@ struct DashboardView: View {
     /// Rejilla de indicadores clave (2 columnas).
     private var kpiGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: AppSpacing.m) {
+            // Glow semántico por contexto: gasto en cian, financiación en
+            // magenta, ahorro en lima. El resto queda en reposo.
             KPICard(
                 title: String(localized: "dashboard.kpi.monthlySpend", defaultValue: "Gasto mensual"),
                 value: viewModel.monthlyTotal.formatted(.currency(code: viewModel.currencyCode)),
                 icon: "eurosign.circle.fill",
-                tint: .electricBlue
+                tint: .appCyan,
+                glows: true
             )
             KPICard(
                 title: String(localized: "dashboard.kpi.activeSubscriptions", defaultValue: "Suscripciones"),
                 value: "\(viewModel.activeSubscriptionsCount)",
                 icon: "square.stack.3d.up.fill",
-                tint: .appCyan
+                tint: .electricBlue
             )
             KPICard(
                 title: String(localized: "dashboard.kpi.activeFinancings", defaultValue: "Financiaciones"),
                 value: "\(viewModel.activeFinancingsCount)",
                 icon: "creditcard.fill",
-                tint: .purple
+                tint: .appMagenta
             )
             KPICard(
                 title: String(localized: "dashboard.kpi.potentialSaving", defaultValue: "Ahorro potencial"),
@@ -122,7 +129,8 @@ struct DashboardView: View {
                     defaultValue: "\(viewModel.potentialSaving.formatted(.currency(code: viewModel.currencyCode)))/año"
                 ),
                 icon: "leaf.fill",
-                tint: .green
+                tint: .appLime,
+                glows: true
             )
         }
         .animation(.spring, value: viewModel.monthlyTotal)

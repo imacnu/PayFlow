@@ -2,8 +2,9 @@
 //  CalendarView.swift
 //  Subscription Guardian
 //
-//  Calendario financiero mensual con navegación entre meses, leyenda de
-//  colores y lista de eventos del mes.
+//  Calendario financiero: cuadrícula de tiempo iluminada, silenciosa y
+//  precisa. Cápsula de mes protagonista, leyenda con respiración sutil y
+//  eventos del mes integrados en el mismo sistema visual.
 //
 
 import SwiftUI
@@ -30,26 +31,29 @@ struct CalendarView: View {
             ScrollView {
                 VStack(spacing: AppSpacing.m) {
                     monthHeader
+                        .cascadeIn(0)
 
-                    GlassCard {
-                        MonthGridView(
-                            month: viewModel.displayedMonth,
-                            eventsByDay: viewModel.eventsByDay,
-                            selectedDay: Binding(
-                                get: { viewModel.selectedDay },
-                                set: { viewModel.selectedDay = $0 }
-                            )
+                    MonthGridView(
+                        month: viewModel.displayedMonth,
+                        eventsByDay: viewModel.eventsByDay,
+                        selectedDay: Binding(
+                            get: { viewModel.selectedDay },
+                            set: { viewModel.selectedDay = $0 }
                         )
-                    }
+                    )
+                    .glassCard()
                     .transition(.opacity)
                     .id(viewModel.displayedMonth)
+                    .cascadeIn(1)
 
                     legend
+                        .cascadeIn(2)
 
                     monthEventsList
+                        .cascadeIn(3)
                 }
                 .padding(.horizontal, AppSpacing.m)
-                .padding(.bottom, AppSpacing.xl)
+                .padding(.bottom, AppSpacing.xxl + AppSpacing.l)
             }
             .appBackground()
             .navigationTitle(Text("tab.calendar", comment: "Calendario"))
@@ -65,39 +69,42 @@ struct CalendarView: View {
 
     // MARK: - Componentes
 
-    /// Cabecera con el mes visible y flechas de navegación.
+    /// Cápsula protagonista con el mes visible y navegación táctil.
     private var monthHeader: some View {
-        GlassCard(padding: AppSpacing.s) {
-            HStack {
-                Button {
-                    withAnimation(.spring) { viewModel.previousMonth() }
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.headline)
-                        .frame(width: 40, height: 40)
-                }
-
-                Spacer()
-
-                Text(viewModel.displayedMonth, format: .dateTime.month(.wide).year())
+        HStack {
+            Button {
+                withAnimation(AppMotion.standard) { viewModel.previousMonth() }
+            } label: {
+                Image(systemName: "chevron.left")
                     .font(.headline)
-                    .textCase(nil)
-                    .contentTransition(.numericText())
-
-                Spacer()
-
-                Button {
-                    withAnimation(.spring) { viewModel.nextMonth() }
-                } label: {
-                    Image(systemName: "chevron.right")
-                        .font(.headline)
-                        .frame(width: 40, height: 40)
-                }
+                    .foregroundStyle(Color.appCyan)
+                    .frame(width: 40, height: 40)
             }
+            .buttonStyle(.pressableCard)
+
+            Spacer()
+
+            Text(viewModel.displayedMonth, format: .dateTime.month(.wide).year())
+                .font(.system(.headline, design: .rounded).bold())
+                .textCase(nil)
+                .contentTransition(.numericText())
+
+            Spacer()
+
+            Button {
+                withAnimation(AppMotion.standard) { viewModel.nextMonth() }
+            } label: {
+                Image(systemName: "chevron.right")
+                    .font(.headline)
+                    .foregroundStyle(Color.appCyan)
+                    .frame(width: 40, height: 40)
+            }
+            .buttonStyle(.pressableCard)
         }
+        .glassCard(cornerRadius: AppRadius.large, padding: AppSpacing.s)
     }
 
-    /// Leyenda del código de colores del calendario.
+    /// Leyenda del código de colores con respiración sutil en los puntos.
     private var legend: some View {
         HStack(spacing: AppSpacing.m) {
             legendItem(
@@ -105,15 +112,15 @@ struct CalendarView: View {
                 label: String(localized: "calendar.legend.subscriptions", defaultValue: "Suscripciones")
             )
             legendItem(
-                color: .green,
+                color: .appLime,
                 label: String(localized: "calendar.legend.financingEnd", defaultValue: "Fin financiación")
             )
             legendItem(
-                color: .orange,
+                color: .appAmber,
                 label: String(localized: "calendar.legend.upcoming", defaultValue: "Próximo")
             )
             legendItem(
-                color: .red,
+                color: .appMagenta,
                 label: String(localized: "calendar.legend.overdue", defaultValue: "Vencido")
             )
         }
@@ -122,7 +129,7 @@ struct CalendarView: View {
 
     private func legendItem(color: Color, label: String) -> some View {
         HStack(spacing: 4) {
-            Circle().fill(color).frame(width: 7, height: 7)
+            BreathingDot(color: color)
             Text(label)
                 .font(.caption2)
                 .foregroundStyle(.secondary)
@@ -131,38 +138,66 @@ struct CalendarView: View {
 
     /// Lista compacta de los eventos del mes visible.
     private var monthEventsList: some View {
-        GlassCard {
-            VStack(alignment: .leading, spacing: AppSpacing.s) {
-                Text("calendar.monthEvents.title", comment: "Eventos del mes")
-                    .font(.headline)
+        VStack(alignment: .leading, spacing: AppSpacing.s) {
+            Text("calendar.monthEvents.title", comment: "Eventos del mes")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
 
-                if viewModel.monthEvents.isEmpty {
-                    Text("calendar.monthEvents.empty", comment: "Sin eventos este mes")
+            if viewModel.monthEvents.isEmpty {
+                // Vacío en calma: orden y silencio, no ausencia.
+                HStack(spacing: AppSpacing.s) {
+                    Image(systemName: "moon.stars.fill")
+                        .font(.subheadline)
+                        .foregroundStyle(Color.appCyan.opacity(0.7))
+                    Text("calendar.monthEvents.empty", comment: "Un mes tranquilo: sin cargos previstos.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                } else {
-                    ForEach(viewModel.monthEvents) { event in
-                        HStack(spacing: AppSpacing.s) {
-                            Circle()
-                                .fill(event.color())
-                                .frame(width: 7, height: 7)
-                            Text(event.date, format: .dateTime.day().month(.abbreviated))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .frame(width: 56, alignment: .leading)
-                            Text(event.title)
-                                .font(.caption.weight(.medium))
-                            Spacer()
-                            if let amount = event.amount {
-                                Text(amount, format: .currency(code: event.currencyCode))
-                                    .font(.caption.bold())
-                            }
+                }
+                .padding(.vertical, AppSpacing.xxs)
+            } else {
+                ForEach(viewModel.monthEvents) { event in
+                    HStack(spacing: AppSpacing.s) {
+                        Circle()
+                            .fill(event.color())
+                            .frame(width: 7, height: 7)
+                            .glow(event.color(), radius: 4, opacity: 0.5)
+                        Text(event.date, format: .dateTime.day().month(.abbreviated))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .frame(width: 56, alignment: .leading)
+                        Text(event.title)
+                            .font(.caption.weight(.medium))
+                        Spacer()
+                        if let amount = event.amount {
+                            Text(amount, format: .currency(code: event.currencyCode))
+                                .font(.system(.caption, design: .rounded).bold())
                         }
                     }
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassCard()
+    }
+}
+
+/// Punto de leyenda con respiración muy controlada, sin distraer.
+private struct BreathingDot: View {
+    let color: Color
+
+    @State private var breathing = false
+
+    var body: some View {
+        Circle()
+            .fill(color)
+            .frame(width: 7, height: 7)
+            .glow(color, radius: 4, opacity: breathing ? 0.6 : 0.25)
+            .scaleEffect(breathing ? 1.1 : 0.95)
+            .animation(
+                .easeInOut(duration: 2.4).repeatForever(autoreverses: true),
+                value: breathing
+            )
+            .onAppear { breathing = true }
     }
 }
 

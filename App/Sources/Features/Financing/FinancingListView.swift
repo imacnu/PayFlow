@@ -60,6 +60,7 @@ struct FinancingListView: View {
         ScrollView {
             LazyVStack(spacing: AppSpacing.m) {
                 summaryHeader
+                    .cascadeIn(0)
 
                 ForEach(viewModel.financings, id: \.id) { financing in
                     NavigationLink {
@@ -81,7 +82,7 @@ struct FinancingListView: View {
                 }
             }
             .padding(.horizontal, AppSpacing.m)
-            .padding(.bottom, AppSpacing.xl)
+            .padding(.bottom, AppSpacing.xxl + AppSpacing.l)
         }
         .refreshable { viewModel.load() }
     }
@@ -121,13 +122,17 @@ struct FinancingListView: View {
         }
     }
 
+    /// Vacío que vende la utilidad: alivio y control, no descripción literal.
     private var emptyState: some View {
         EmptyStateView(
             icon: "creditcard.fill",
-            title: String(localized: "financing.empty.title", defaultValue: "Sin financiaciones"),
+            title: String(
+                localized: "financing.empty.title",
+                defaultValue: "Tus plazos, en claridad total"
+            ),
             message: String(
                 localized: "financing.empty.message",
-                defaultValue: "Registra tus compras a plazos (Klarna, Aplazame…) para controlar las cuotas pendientes."
+                defaultValue: "Añade un plan (Klarna, Aplazame…) y sigue cada cuota con una vista limpia, visual y sin sorpresas."
             ),
             actionTitle: String(localized: "financing.add", defaultValue: "Añadir financiación"),
             action: { showCreateForm = true }
@@ -165,7 +170,7 @@ struct FinancingRowView: View {
 
             AnimatedProgressBar(
                 progress: financing.progress,
-                tint: financing.status == .completed ? .green : .electricBlue
+                tint: financing.status == .completed ? .appLime : .appCyan
             )
 
             HStack {
@@ -183,7 +188,7 @@ struct FinancingRowView: View {
                 if financing.status == .completed {
                     PillBadge(
                         text: String(localized: "financing.status.completed", defaultValue: "Completada"),
-                        tint: .green
+                        tint: .appLime
                     )
                 } else if let next = financing.nextInstallmentDate {
                     Text(next, format: .dateTime.day().month(.abbreviated))

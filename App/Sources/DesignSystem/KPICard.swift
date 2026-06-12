@@ -2,7 +2,8 @@
 //  KPICard.swift
 //  Subscription Guardian
 //
-//  Tarjeta de indicador clave (KPI) con icono, título, valor y tendencia opcional.
+//  Tarjeta de indicador clave (KPI): el valor numérico es el protagonista
+//  absoluto; icono y label quedan en reposo. Glow semántico opcional.
 //
 
 import SwiftUI
@@ -32,11 +33,11 @@ struct KPICard: View {
             }
         }
 
-        /// Color semántico: subir gasto = naranja, bajar = verde, neutral = gris.
+        /// Color semántico: subir gasto = ámbar, bajar = lima, neutral = gris.
         var color: Color {
             switch self {
-            case .up: return .orange
-            case .down: return .green
+            case .up: return .appAmber
+            case .down: return .appLime
             case .neutral: return .secondary
             }
         }
@@ -48,29 +49,31 @@ struct KPICard: View {
     let icon: String
     let tint: Color
     var trend: Trend? = nil
+    /// Activa el glow semántico de la tarjeta (solo KPIs con significado).
+    var glows: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.s) {
+            // Label e icono en reposo: pierden protagonismo sin perder lectura.
             HStack(spacing: AppSpacing.s) {
-                // Icono dentro de un círculo teñido.
-                ZStack {
-                    Circle()
-                        .fill(tint.opacity(0.15))
-                        .frame(width: 32, height: 32)
-                    Image(systemName: icon)
-                        .font(.footnote.weight(.semibold))
-                        .foregroundStyle(tint)
-                }
+                Image(systemName: icon)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(tint.opacity(0.85))
 
                 Text(title)
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
 
                 Spacer(minLength: 0)
             }
 
+            // El importe domina la tarjeta.
             Text(value)
-                .font(.title2.bold())
+                .font(.system(.title2, design: .rounded).bold())
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
                 .contentTransition(.numericText())
 
             // Píldora de tendencia opcional.
@@ -86,7 +89,8 @@ struct KPICard: View {
                 .background(trend.color.opacity(0.12), in: Capsule())
             }
         }
-        .glassCard()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassCard(glow: glows ? tint : nil)
     }
 }
 
@@ -101,8 +105,9 @@ struct KPICard: View {
                 title: "Monthly spend",
                 value: "$42.97",
                 icon: "creditcard.fill",
-                tint: .electricBlue,
-                trend: .up("+12% vs last month")
+                tint: .appCyan,
+                trend: .up("+12% vs last month"),
+                glows: true
             )
 
             KPICard(
@@ -117,9 +122,10 @@ struct KPICard: View {
                 title: "Next renewal",
                 value: "3 days",
                 icon: "calendar",
-                tint: .orange
+                tint: .appAmber
             )
         }
         .padding(AppSpacing.l)
     }
+    .preferredColorScheme(.dark)
 }

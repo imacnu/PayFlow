@@ -3,8 +3,8 @@
 //  Subscription Guardian
 //
 //  Evento del calendario financiero con su código de color:
-//  azul = suscripciones, verde = fin de financiación,
-//  naranja = pago próximo (≤ 3 días), rojo = vencido.
+//  azul = suscripciones, lima = fin de financiación,
+//  ámbar = pago próximo (≤ 3 días), magenta = vencido.
 //
 
 import SwiftUI
@@ -34,16 +34,16 @@ struct CalendarEvent: Identifiable, Hashable {
         let eventDay = calendar.startOfDay(for: date)
 
         if eventDay < startOfToday {
-            return .red
+            return .appMagenta
         }
         if let days = calendar.dateComponents([.day], from: startOfToday, to: eventDay).day,
            days <= 3, kind != .financingEnd {
-            return .orange
+            return .appAmber
         }
         switch kind {
         case .subscriptionRenewal: return .electricBlue
         case .installment: return .appCyan
-        case .financingEnd: return .green
+        case .financingEnd: return .appLime
         }
     }
 }

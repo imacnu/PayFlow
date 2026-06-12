@@ -2,35 +2,67 @@
 //  PrimaryButtonStyle.swift
 //  Subscription Guardian
 //
-//  Estilo de botón principal: cápsula con gradiente de acento y efecto de pulsación.
+//  Estilos de botón del sistema: CTA principal hero (cápsula con gradiente
+//  y glow cian) y estilo pulsable para tarjetas y tiles.
 //
 
 import SwiftUI
 
-/// Estilo de botón principal de la app con gradiente y animación al pulsar.
+/// Estilo de botón principal de la app: cierre de flujo con presencia,
+/// glow controlado y respuesta táctil física.
 struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.body.weight(.bold))
             .foregroundStyle(.white)
             .padding(.horizontal, AppSpacing.l)
-            .frame(minHeight: 50)
+            .frame(minHeight: 52)
             .background(LinearGradient.appAccent, in: Capsule())
-            // Sombra teñida con el azul de acento para dar sensación de elevación.
-            .shadow(color: Color.electricBlue.opacity(0.35), radius: 12, x: 0, y: 6)
-            .scaleEffect(configuration.isPressed ? 0.97 : 1)
-            .animation(
-                .spring(response: 0.3, dampingFraction: 0.7),
-                value: configuration.isPressed
+            .overlay(
+                // Brillo superior sutil que refuerza la materialidad.
+                Capsule()
+                    .strokeBorder(
+                        LinearGradient(
+                            colors: [Color.white.opacity(0.5), Color.white.opacity(0.0)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ),
+                        lineWidth: 1
+                    )
             )
+            // Glow cian de acción principal; se hunde al pulsar.
+            .shadow(
+                color: Color.appCyan.opacity(configuration.isPressed ? 0.2 : 0.4),
+                radius: configuration.isPressed ? 8 : 16,
+                x: 0,
+                y: configuration.isPressed ? 3 : 8
+            )
+            .scaleEffect(configuration.isPressed ? 0.96 : 1)
+            .animation(AppMotion.tap, value: configuration.isPressed)
     }
 }
 
-// MARK: - Acceso abreviado
+/// Estilo pulsable para tarjetas, tiles e iconos: compresión leve,
+/// profundización de sombra y rebote mínimo al soltar.
+struct PressableCardStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.97 : 1)
+            .opacity(configuration.isPressed ? 0.92 : 1)
+            .animation(AppMotion.tap, value: configuration.isPressed)
+    }
+}
+
+// MARK: - Accesos abreviados
 
 extension ButtonStyle where Self == PrimaryButtonStyle {
     /// Permite escribir `.buttonStyle(.primary)`.
     static var primary: PrimaryButtonStyle { PrimaryButtonStyle() }
+}
+
+extension ButtonStyle where Self == PressableCardStyle {
+    /// Permite escribir `.buttonStyle(.pressableCard)`.
+    static var pressableCard: PressableCardStyle { PressableCardStyle() }
 }
 
 // MARK: - Vista previa
@@ -48,7 +80,15 @@ extension ButtonStyle where Self == PrimaryButtonStyle {
                 Label("Scan inbox", systemImage: "envelope.badge")
             }
             .buttonStyle(.primary)
+
+            Button {
+            } label: {
+                Text("Pressable card")
+                    .glassCard()
+            }
+            .buttonStyle(.pressableCard)
         }
         .padding(AppSpacing.l)
     }
+    .preferredColorScheme(.dark)
 }

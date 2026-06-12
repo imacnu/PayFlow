@@ -29,10 +29,17 @@ struct AnimatedProgressBar: View {
                 Capsule()
                     .fill(.quaternary)
 
-                // Relleno proporcional al progreso.
+                // Relleno luminoso proporcional al progreso.
                 Capsule()
-                    .fill(tint)
+                    .fill(
+                        LinearGradient(
+                            colors: [tint.opacity(0.75), tint],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
                     .frame(width: proxy.size.width * clampedProgress)
+                    .glow(tint, radius: 6, opacity: 0.35)
             }
         }
         .frame(height: height)

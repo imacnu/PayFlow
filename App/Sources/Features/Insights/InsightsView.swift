@@ -18,9 +18,11 @@ struct InsightsView: View {
             ScrollView {
                 VStack(spacing: AppSpacing.m) {
                     summaryCard
+                        .cascadeIn(0)
 
                     if viewModel.totalPotentialSaving > 0 {
                         savingsBanner
+                            .cascadeIn(1)
                     }
 
                     if viewModel.insights.isEmpty {
@@ -40,7 +42,7 @@ struct InsightsView: View {
                     }
                 }
                 .padding(.horizontal, AppSpacing.m)
-                .padding(.bottom, AppSpacing.xl)
+                .padding(.bottom, AppSpacing.xxl + AppSpacing.l)
             }
             .appBackground()
             .navigationTitle(Text("tab.insights", comment: "Insights"))
@@ -110,7 +112,7 @@ struct InsightsView: View {
             Text("\(variation)%")
                 .font(.caption.bold())
         }
-        .foregroundStyle(increased ? Color.orange : Color.green)
+        .foregroundStyle(increased ? Color.appAmber : Color.appLime)
     }
 
     /// Banner principal de ahorro potencial.
@@ -122,6 +124,7 @@ struct InsightsView: View {
                     .foregroundStyle(.white)
                     .frame(width: 52, height: 52)
                     .background(Circle().fill(LinearGradient.appAccent))
+                    .glow(.appLime, radius: 12, opacity: 0.4)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(

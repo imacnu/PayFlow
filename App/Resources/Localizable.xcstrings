@@ -662,13 +662,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No events this month"
+            "value": "A quiet month: no charges expected."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sin eventos este mes"
+            "value": "Un mes tranquilo: sin cargos previstos."
           }
         }
       }
@@ -950,13 +950,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No category data yet"
+            "value": "Your spending map by category will appear here."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sin datos de categorías"
+            "value": "Tu mapa de gasto por categorías aparecerá aquí."
           }
         }
       }
@@ -998,13 +998,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No history yet"
+            "value": "Your monthly evolution will take shape here over time."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sin histórico todavía"
+            "value": "Tu evolución mensual se dibujará aquí con el tiempo."
           }
         }
       }
@@ -1126,13 +1126,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No upcoming payments"
+            "value": "No payments in sight. All calm."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "No hay pagos próximos"
+            "value": "Sin pagos a la vista. Todo en calma."
           }
         }
       }
@@ -1302,13 +1302,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Track your buy-now-pay-later purchases (Klarna, Aplazame…) to stay on top of pending installments."
+            "value": "Add a plan (Klarna, Aplazame…) and follow every installment with a clean, visual, surprise-free view."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Registra tus compras a plazos (Klarna, Aplazame…) para controlar las cuotas pendientes."
+            "value": "Añade un plan (Klarna, Aplazame…) y sigue cada cuota con una vista limpia, visual y sin sorpresas."
           }
         }
       }
@@ -1318,13 +1318,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No financing yet"
+            "value": "Your installments, in total clarity"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sin financiaciones"
+            "value": "Tus plazos, en claridad total"
           }
         }
       }
@@ -3542,13 +3542,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Add your first subscription to start tracking your monthly spending."
+            "value": "Add your first subscription and start deciding clearly what deserves to stay."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Añade tu primera suscripción para empezar a controlar tu gasto mensual."
+            "value": "Añade tu primera suscripción y empieza a decidir con claridad qué merece quedarse."
           }
         }
       }
@@ -3558,13 +3558,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No subscriptions yet"
+            "value": "All your recurring spending, in plain sight"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sin suscripciones"
+            "value": "Todo tu gasto recurrente, a la vista"
           }
         }
       }
@@ -3581,6 +3581,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Elegir de servicios populares"
+          }
+        }
+      }
+    },
+    "subscriptions.form.catalogHint": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Netflix, Spotify, iCloud and more in one tap"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Netflix, Spotify, iCloud y más en un toque"
           }
         }
       }
@@ -3981,6 +3997,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Servicio personalizado"
+          }
+        }
+      }
+    },
+    "subscriptions.picker.customHint": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create any service your way"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crea cualquier servicio a tu medida"
           }
         }
       }

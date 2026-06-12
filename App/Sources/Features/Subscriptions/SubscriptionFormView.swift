@@ -49,14 +49,22 @@ struct SubscriptionFormView: View {
                         dismiss()
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(String(localized: "common.save", defaultValue: "Guardar")) {
-                        if viewModel.save() {
-                            dismiss()
-                        }
+            }
+            // CTA hero de cierre de flujo: flotante y claramente prioritario.
+            .safeAreaInset(edge: .bottom) {
+                Button {
+                    if viewModel.save() {
+                        dismiss()
                     }
-                    .disabled(!viewModel.isValid)
+                } label: {
+                    Text(String(localized: "common.save", defaultValue: "Guardar"))
+                        .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.primary)
+                .disabled(!viewModel.isValid)
+                .opacity(viewModel.isValid ? 1 : 0.5)
+                .padding(.horizontal, AppSpacing.l)
+                .padding(.vertical, AppSpacing.s)
             }
             .sheet(isPresented: $showServicePicker) {
                 ServicePickerView { template in
@@ -74,7 +82,8 @@ struct SubscriptionFormView: View {
 
     // MARK: - Secciones
 
-    /// Acceso rápido al catálogo de servicios conocidos.
+    /// Acceso rápido al catálogo: tile hero, un acelerador inteligente y no
+    /// una simple fila más del formulario.
     private var quickPickSection: some View {
         Section {
             Button {
@@ -85,17 +94,33 @@ struct SubscriptionFormView: View {
                         symbol: viewModel.iconSymbol,
                         monogram: viewModel.monogram,
                         colorHex: viewModel.colorHex,
-                        size: 36
+                        size: 44
                     )
-                    Text(String(
-                        localized: "subscriptions.form.catalog",
-                        defaultValue: "Elegir de servicios populares"
-                    ))
+                    .glow(.appCyan, radius: 8, opacity: 0.3)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(String(
+                            localized: "subscriptions.form.catalog",
+                            defaultValue: "Elegir de servicios populares"
+                        ))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+
+                        Text(String(
+                            localized: "subscriptions.form.catalogHint",
+                            defaultValue: "Netflix, Spotify, iCloud y más en un toque"
+                        ))
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                    }
+
                     Spacer()
+
                     Image(systemName: "chevron.right")
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.appCyan)
                 }
+                .padding(.vertical, AppSpacing.xxs)
             }
         }
     }
@@ -152,13 +177,16 @@ struct SubscriptionFormView: View {
             localized: "subscriptions.form.section.renewal",
             defaultValue: "Renovación"
         )) {
+            // Toggle expresivo: al activarse ilumina la zona y despliega la
+            // secuencia de fecha y recordatorio.
             Toggle(
                 String(
                     localized: "subscriptions.form.hasrenewal",
                     defaultValue: "Tiene fecha de renovación"
                 ),
-                isOn: $viewModel.hasRenewalDate
+                isOn: $viewModel.hasRenewalDate.animation(AppMotion.standard)
             )
+            .tint(.appCyan)
 
             if viewModel.hasRenewalDate {
                 DatePicker(
@@ -195,50 +223,66 @@ struct SubscriptionFormView: View {
             localized: "subscriptions.form.section.appearance",
             defaultValue: "Icono y color"
         )) {
+            // El icono activo se enciende: relleno con gradiente, glow y
+            // símbolo en blanco. No basta con un borde.
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: AppSpacing.s) {
                 ForEach(SubscriptionFormViewModel.symbolOptions, id: \.self) { symbol in
+                    let isActive = viewModel.iconSymbol == symbol
                     Button {
-                        viewModel.iconSymbol = symbol
+                        withAnimation(AppMotion.tap) {
+                            viewModel.iconSymbol = symbol
+                        }
                     } label: {
                         Image(systemName: symbol)
                             .font(.body.weight(.semibold))
+                            .foregroundStyle(isActive ? Color.white : Color.primary)
                             .frame(width: 44, height: 44)
                             .background(
-                                RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous)
-                                    .fill(viewModel.iconSymbol == symbol
-                                          ? Color.electricBlue.opacity(0.2)
-                                          : Color.clear)
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: AppRadius.control, style: .continuous)
-                                    .strokeBorder(
-                                        viewModel.iconSymbol == symbol ? Color.electricBlue : Color.clear,
-                                        lineWidth: 2
+                                RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous)
+                                    .fill(
+                                        isActive
+                                            ? AnyShapeStyle(LinearGradient.appAccent)
+                                            : AnyShapeStyle(Color.primary.opacity(0.06))
                                     )
                             )
+                            .glow(isActive ? .appCyan : .clear, radius: 10, opacity: isActive ? 0.4 : 0)
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(.pressableCard)
                 }
             }
             .padding(.vertical, 4)
 
+            // Selector de color fluido y táctil: el elegido crece y emite luz.
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: AppSpacing.s) {
                 ForEach(SubscriptionFormViewModel.colorOptions, id: \.self) { hex in
+                    let isActive = viewModel.colorHex == hex
                     Button {
-                        viewModel.colorHex = hex
+                        withAnimation(AppMotion.tap) {
+                            viewModel.colorHex = hex
+                        }
                     } label: {
                         ZStack {
                             Circle()
                                 .fill(Color(hex: hex))
                                 .frame(width: 36, height: 36)
-                            if viewModel.colorHex == hex {
+                                .overlay(
+                                    Circle()
+                                        .strokeBorder(
+                                            Color.white.opacity(isActive ? 0.8 : 0),
+                                            lineWidth: 2
+                                        )
+                                )
+                                .glow(Color(hex: hex), radius: 8, opacity: isActive ? 0.55 : 0)
+                                .scaleEffect(isActive ? 1.12 : 1)
+
+                            if isActive {
                                 Image(systemName: "checkmark")
                                     .font(.caption.weight(.bold))
                                     .foregroundStyle(.white)
                             }
                         }
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(.pressableCard)
                 }
             }
             .padding(.vertical, 4)

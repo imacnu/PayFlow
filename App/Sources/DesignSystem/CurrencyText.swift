@@ -12,7 +12,9 @@ struct CurrencyText: View {
     let amount: Decimal
     /// Código ISO 4217, p. ej. "USD" o "EUR".
     let currencyCode: String
-    var font: Font = .title2.bold()
+    /// Los valores financieros son el punto de mayor protagonismo
+    /// tipográfico: redondeados, en negrita y con transición numérica.
+    var font: Font = .system(.title2, design: .rounded).bold()
 
     var body: some View {
         Text(amount, format: .currency(code: currencyCode))

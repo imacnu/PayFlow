@@ -71,27 +71,36 @@ struct MonthGridView: View {
         let isSelected = selectedDay.map { calendar.isDate($0, inSameDayAs: day) } ?? false
 
         return Button {
-            selectedDay = day
+            withAnimation(AppMotion.tap) {
+                selectedDay = day
+            }
         } label: {
             VStack(spacing: 3) {
                 Text("\(calendar.component(.day, from: day))")
-                    .font(.callout.weight(isToday ? .bold : .regular))
+                    .font(.system(.callout, design: .rounded).weight(isToday ? .bold : .regular))
                     .foregroundStyle(isToday ? Color.white : Color.primary)
-                    .frame(width: 30, height: 30)
+                    .frame(width: 32, height: 32)
                     .background {
+                        // Hoy: foco con gradiente y luz. Seleccionado: anillo
+                        // neón cian vibrante.
                         if isToday {
-                            Circle().fill(LinearGradient.appAccent)
+                            Circle()
+                                .fill(LinearGradient.appAccent)
+                                .glow(.appCyan, radius: 10, opacity: 0.45)
                         } else if isSelected {
-                            Circle().stroke(Color.electricBlue, lineWidth: 1.5)
+                            Circle()
+                                .stroke(Color.appCyan, lineWidth: 2)
+                                .glow(.appCyan, radius: 8, opacity: 0.5)
                         }
                     }
 
-                // Hasta 3 puntos de color por día.
+                // Hasta 3 puntos de color por día, con luz propia.
                 HStack(spacing: 3) {
                     ForEach(events.prefix(3), id: \.id) { event in
                         Circle()
                             .fill(event.color())
                             .frame(width: 5, height: 5)
+                            .glow(event.color(), radius: 3, opacity: 0.6)
                     }
                 }
                 .frame(height: 6)

@@ -118,10 +118,19 @@ struct FinancingFormView: View {
                         )
                         .keyboardType(.decimalPad)
 
-                        Button(String(localized: "financing.form.calculate", defaultValue: "Calcular")) {
-                            suggestMonthlyAmount()
+                        // Cálculo de cuota: debe sentirse inteligente y vivo.
+                        Button {
+                            withAnimation(AppMotion.standard) {
+                                suggestMonthlyAmount()
+                            }
+                        } label: {
+                            Label(
+                                String(localized: "financing.form.calculate", defaultValue: "Calcular"),
+                                systemImage: "wand.and.stars"
+                            )
+                            .font(.caption.bold())
+                            .foregroundStyle((totalAmount ?? 0) > 0 ? Color.appCyan : Color.secondary)
                         }
-                        .font(.caption.bold())
                         .disabled((totalAmount ?? 0) <= 0)
                     }
 
@@ -135,8 +144,9 @@ struct FinancingFormView: View {
                 Section {
                     Toggle(
                         String(localized: "financing.form.hasFirstDate", defaultValue: "Fecha de primera cuota"),
-                        isOn: $hasFirstInstallmentDate
+                        isOn: $hasFirstInstallmentDate.animation(AppMotion.standard)
                     )
+                    .tint(.appCyan)
                     if hasFirstInstallmentDate {
                         DatePicker(
                             String(localized: "financing.form.firstDate", defaultValue: "Primera cuota"),
@@ -151,16 +161,34 @@ struct FinancingFormView: View {
                             }
                         }
                         if accruedInstallments > 0 {
-                            LabeledContent(
-                                String(localized: "financing.form.accrued", defaultValue: "Cuotas ya devengadas")
-                            ) {
+                            // Insight contextual con jerarquía propia, no una
+                            // fila secundaria más.
+                            HStack(spacing: AppSpacing.s) {
+                                Image(systemName: "sparkles")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundStyle(Color.appCyan)
+
+                                Text(
+                                    String(
+                                        localized: "financing.form.accrued",
+                                        defaultValue: "Cuotas ya devengadas"
+                                    )
+                                )
+                                .font(.footnote.weight(.medium))
+
+                                Spacer()
+
                                 Text(
                                     String(
                                         localized: "financing.form.accruedValue",
                                         defaultValue: "\(accruedInstallments) de \(totalInstallments)"
                                     )
                                 )
+                                .font(.system(.footnote, design: .rounded).bold())
+                                .foregroundStyle(Color.appCyan)
                             }
+                            .padding(.vertical, AppSpacing.xxs)
+                            .listRowBackground(Color.appCyan.opacity(0.08))
                         }
                     }
                 } header: {
@@ -205,12 +233,20 @@ struct FinancingFormView: View {
                         dismiss()
                     }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(String(localized: "common.save", defaultValue: "Guardar")) {
-                        save()
-                    }
-                    .disabled(!isValid)
+            }
+            // CTA hero de cierre de flujo: flotante y claramente prioritario.
+            .safeAreaInset(edge: .bottom) {
+                Button {
+                    save()
+                } label: {
+                    Text(String(localized: "common.save", defaultValue: "Guardar"))
+                        .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.primary)
+                .disabled(!isValid)
+                .opacity(isValid ? 1 : 0.5)
+                .padding(.horizontal, AppSpacing.l)
+                .padding(.vertical, AppSpacing.s)
             }
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
@@ -221,8 +257,8 @@ struct FinancingFormView: View {
 
     // MARK: - Componentes
 
-    /// Fila del número de cuotas: campo de texto con teclado numérico
-    /// acompañado de botones de incremento y decremento.
+    /// Stepper premium del número de cuotas: campo excavado con teclado
+    /// numérico y botones +/− con presencia y feedback táctil.
     private var installmentsRow: some View {
         HStack {
             Text("financing.form.installmentsLabel", comment: "Número de cuotas")
@@ -230,13 +266,15 @@ struct FinancingFormView: View {
             Spacer()
 
             Button {
-                adjustInstallments(by: -1)
+                withAnimation(AppMotion.tap) { adjustInstallments(by: -1) }
             } label: {
-                Image(systemName: "minus.circle.fill")
-                    .font(.title3)
-                    .foregroundStyle(totalInstallments > 1 ? Color.electricBlue : Color.secondary)
+                Image(systemName: "minus")
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(totalInstallments > 1 ? Color.appCyan : Color.secondary)
+                    .frame(width: 32, height: 32)
+                    .insetPanel(cornerRadius: AppRadius.small, padding: 0)
             }
-            .buttonStyle(.borderless)
+            .buttonStyle(.pressableCard)
             .disabled(totalInstallments <= 1)
             .accessibilityLabel(
                 String(localized: "financing.form.fewerInstallments", defaultValue: "Quitar una cuota")
@@ -245,21 +283,22 @@ struct FinancingFormView: View {
             TextField("12", text: $installmentsText)
                 .keyboardType(.numberPad)
                 .multilineTextAlignment(.center)
+                .font(.system(.body, design: .rounded).bold())
                 .frame(width: 56)
                 .padding(.vertical, 4)
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.secondary.opacity(0.12))
-                )
+                .insetPanel(cornerRadius: AppRadius.small, padding: 0)
+                .contentTransition(.numericText())
 
             Button {
-                adjustInstallments(by: 1)
+                withAnimation(AppMotion.tap) { adjustInstallments(by: 1) }
             } label: {
-                Image(systemName: "plus.circle.fill")
-                    .font(.title3)
-                    .foregroundStyle(Color.electricBlue)
+                Image(systemName: "plus")
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(Color.appCyan)
+                    .frame(width: 32, height: 32)
+                    .insetPanel(cornerRadius: AppRadius.small, padding: 0)
             }
-            .buttonStyle(.borderless)
+            .buttonStyle(.pressableCard)
             .accessibilityLabel(
                 String(localized: "financing.form.moreInstallments", defaultValue: "Añadir una cuota")
             )
