@@ -23,9 +23,10 @@ enum AppConfig {
 
     // MARK: - Google Sign In
 
-    /// Desactivado por defecto: requiere un Client ID real en Info.plist (GIDClientID)
-    /// y el esquema de URL invertido. Ver README.
-    static let googleSignInEnabled = false
+    /// Muestra el botón "Continuar con Google". Para que el flujo funcione
+    /// necesita un Client ID real en Info.plist (GIDClientID) y el esquema
+    /// de URL invertido. Ver README.
+    static let googleSignInEnabled = true
 
     // MARK: - StoreKit
 

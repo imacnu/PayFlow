@@ -2870,13 +2870,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Language changes take effect after restarting the app."
+            "value": "The language change applies immediately. Some system texts may update after relaunching the app."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "El cambio de idioma se aplica al reiniciar la app."
+            "value": "El cambio de idioma se aplica al instante. Algunos textos del sistema pueden actualizarse tras reiniciar la app."
           }
         }
       }

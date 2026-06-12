@@ -108,18 +108,18 @@ struct AccountAuthSheet: View {
             .textInputAutocapitalization(.never)
             .autocorrectionDisabled()
 
+            // Sin textContentType de contraseña: el overlay de "contraseña
+            // segura" de iOS bloquea la escritura en estos campos.
             SecureField(
                 String(localized: "auth.password", defaultValue: "Contraseña"),
                 text: $password
             )
-            .textContentType(mode == .register ? .newPassword : .password)
 
             if mode == .register {
                 SecureField(
                     String(localized: "auth.confirmPassword", defaultValue: "Repite la contraseña"),
                     text: $confirmation
                 )
-                .textContentType(.newPassword)
             }
 
             if let error = viewModel.errorMessage {
@@ -156,6 +156,8 @@ struct AccountAuthSheet: View {
     // MARK: - Acciones
 
     private func submit() {
+        // Defensivo: garantiza las dependencias aunque `.task` no haya corrido.
+        viewModel.configure(deps: deps)
         let success = mode == .login
             ? viewModel.signInWithEmail(email: email, password: password)
             : viewModel.register(email: email, password: password, confirmation: confirmation)

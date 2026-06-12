@@ -133,6 +133,8 @@ struct SettingsView: View {
                 }
             }
 
+            // El cambio de idioma lo aplica SubscriptionGuardianApp al
+            // observar esta preferencia (override del bundle + re-render).
             Picker(
                 String(localized: "settings.language", defaultValue: "Idioma"),
                 selection: $languageRaw
@@ -141,15 +143,12 @@ struct SettingsView: View {
                     Text(language.displayName).tag(language.rawValue)
                 }
             }
-            .onChange(of: languageRaw) { _, newValue in
-                (AppLanguage(rawValue: newValue) ?? .system).apply()
-            }
         } header: {
             Text("settings.preferences", comment: "Preferencias")
         } footer: {
             Text(
                 "settings.language.footer",
-                comment: "El cambio de idioma se aplica al reiniciar la app."
+                comment: "El cambio de idioma se aplica al instante."
             )
         }
     }

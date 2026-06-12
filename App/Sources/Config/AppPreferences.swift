@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 /// Apariencia de la interfaz: seguir al sistema o forzar claro/oscuro.
 enum AppAppearance: String, CaseIterable, Identifiable {
@@ -18,10 +19,10 @@ enum AppAppearance: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    /// Esquema de color a aplicar con `.preferredColorScheme` (nil = sistema).
-    var colorScheme: ColorScheme? {
+    /// Estilo de interfaz de UIKit equivalente.
+    var interfaceStyle: UIUserInterfaceStyle {
         switch self {
-        case .system: return nil
+        case .system: return .unspecified
         case .light: return .light
         case .dark: return .dark
         }
@@ -37,10 +38,23 @@ enum AppAppearance: String, CaseIterable, Identifiable {
             return String(localized: "appearance.dark", defaultValue: "Oscuro")
         }
     }
+
+    /// Aplica la apariencia a todas las ventanas de la app. A diferencia de
+    /// `preferredColorScheme` (que no alcanza a las hojas modales), el
+    /// override de la ventana afecta a toda la jerarquía, Ajustes incluido.
+    @MainActor
+    func applyToWindows() {
+        for scene in UIApplication.shared.connectedScenes {
+            guard let windowScene = scene as? UIWindowScene else { continue }
+            for window in windowScene.windows {
+                window.overrideUserInterfaceStyle = interfaceStyle
+            }
+        }
+    }
 }
 
-/// Idioma de la interfaz. El cambio se materializa escribiendo
-/// `AppleLanguages`, por lo que requiere reiniciar la app.
+/// Idioma de la interfaz. El cambio se aplica en caliente redirigiendo las
+/// búsquedas de cadenas al `.lproj` elegido (ver `LanguageOverrideBundle`).
 enum AppLanguage: String, CaseIterable, Identifiable {
     case system
     case spanish = "es"
@@ -62,14 +76,64 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         }
     }
 
-    /// Aplica la preferencia sobre los idiomas de la app. iOS la tiene en
-    /// cuenta en el siguiente arranque.
+    /// Locale para los formatos de fecha y número de SwiftUI.
+    var locale: Locale? {
+        switch self {
+        case .system: return nil
+        case .spanish: return Locale(identifier: "es_ES")
+        case .english: return Locale(identifier: "en_US")
+        }
+    }
+
+    /// Idioma persistido, leído directamente de UserDefaults (para el arranque,
+    /// antes de que @AppStorage esté disponible).
+    static var persisted: AppLanguage {
+        AppLanguage(rawValue: UserDefaults.standard.string(forKey: storageKey) ?? "") ?? .system
+    }
+
+    /// Aplica el idioma de inmediato (override del bundle) y lo persiste
+    /// también en `AppleLanguages` para que el sistema lo respete al reiniciar.
+    @MainActor
     func apply() {
+        LanguageOverrideBundle.activate(languageCode: self == .system ? nil : rawValue)
         switch self {
         case .system:
             UserDefaults.standard.removeObject(forKey: "AppleLanguages")
         case .spanish, .english:
             UserDefaults.standard.set([rawValue], forKey: "AppleLanguages")
         }
+    }
+}
+
+/// Subclase de Bundle que redirige las búsquedas de cadenas localizadas al
+/// idioma elegido en la app. Se instala sobre `Bundle.main` con
+/// `object_setClass`, de modo que `String(localized:)` y `Text` resuelven
+/// contra el `.lproj` del idioma forzado sin reiniciar la app.
+private final class LanguageOverrideBundle: Bundle, @unchecked Sendable {
+    /// Bundle del idioma forzado; `nil` sigue al sistema.
+    /// Solo se escribe desde el hilo principal.
+    nonisolated(unsafe) private static var overrideBundle: Bundle?
+    nonisolated(unsafe) private static var isInstalled = false
+
+    override func localizedString(forKey key: String, value: String?, table tableName: String?) -> String {
+        if let bundle = Self.overrideBundle {
+            return bundle.localizedString(forKey: key, value: value, table: tableName)
+        }
+        return super.localizedString(forKey: key, value: value, table: tableName)
+    }
+
+    @MainActor
+    static func activate(languageCode: String?) {
+        if !isInstalled {
+            object_setClass(Bundle.main, LanguageOverrideBundle.self)
+            isInstalled = true
+        }
+        guard let languageCode,
+              let path = Bundle.main.path(forResource: languageCode, ofType: "lproj"),
+              let bundle = Bundle(path: path) else {
+            overrideBundle = nil
+            return
+        }
+        overrideBundle = bundle
     }
 }
